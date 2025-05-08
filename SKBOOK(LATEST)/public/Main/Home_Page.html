@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/home_page.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="left-section">
+                <a href="#" class="logo-container" onclick="goToHomePage()">
+                    <i class="fas fa-book-open home-button"></i>
+                    <div class="logo-content">
+                        <div class="logo-text">SK<span>Book</span></div>
+                        <div class="logo-tagline">Discover Your Next Adventure</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="center-section">
+               <nav class="nav-links">
+                    <a href="../Main/Home_Page.html" class="nav-link active">Home</a>
+                    <a href="../Main/Categories.html" class="nav-link">Books</a>
+                    <a href="../Main/About_Us.html" class="nav-link">About Us</a>
+                </nav>
+            </div>
+
+            
+                <div class="auth-buttons">
+                    <button class="auth-button icon-btn" id="themeToggle" type="button">
+                    <i class="fas fa-sun"></i>
+                </button>
+                    <button class="auth-button icon-btn" id="notificationBtn" type="button">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <div class="notification-popup">
+                        <div class="notification-header">
+                            <h3>Recent Messages</h3>
+                            <button class="close-notification">×</button>
+                        </div>
+                        <div class="notification-content">
+                        </div>
+                    </div>
+                    <div class="language-selector">
+                        <button class="language-btn" id="languageToggle">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <div class="language-dropdown" id="languageDropdown">
+                            <a class="language-option" data-lang="en">English</a>
+                            <a class="language-option" data-lang="my">Bahasa Melayu</a>
+                            <a class="language-option" data-lang="zh">中文</a>
+                        </div>
+                    </div>
+                    <a href="#" class= "auth-button profile-btn" onclick="goToRegister()">P</a>
+            </div>
+        </header>
+
+        <div class="slogan-section">
+            <h1 class="slogan-text">Explore the World of Books</h1>
+            <p class="slogan-subtext">
+                Discover thousands of books that will inspire, educate, and entertain you. 
+                Your next favorite story is just a click away.
+            </p>
+            <a href="../Main/Categories.html" class="discover-button">Discover More</a>
+        </div>
+
+        <!-- New Book -->
+
+        <div class="trending-section">
+            <div class="section-header">
+                <h2 class="section-title">Trending Books</h2>
+                <p class="section-subtitle">Discover what others are reading right now</p>
+            </div>
+        
+            <div class="trending-container">
+                <div class="book-slider">
+                    <div class="book-card" onclick="window.location.href='../book/2024/book1.html'">
+                        <img src="../image/2024/book_1.png" alt="Book 1" class="book-cover">
+                        <h3 class="book-title">Fairy Tales of Hans Christian Andresen</h3>
+                        <p class="book-author">By H.C.Andersen</p>
+                        <div class="book-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+        
+                    <div class="book-card" onclick="window.location.href='../book/2025/book1.html'">
+                        <img src="../image/2025/book_1.jpg" alt="Book 2" class="book-cover">
+                        <h3 class="book-title">The Plymouth Express Affair</h3>
+                        <p class="book-author">By Agatha Christie</p>
+                        <div class="book-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+        
+                    <div class="book-card" onclick="window.location.href='../book/2024/book4.html'">
+                        <img src="../image/2024/book_4.jpg" alt="Book 3" class="book-cover">
+                        <h3 class="book-title">The Strange Case of Dr. Jekyll and Mr. Hyde</h3>
+                        <p class="book-author">By Robert Louis Stevenson</p>
+                        <div class="book-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>  
+                    </div>
+        
+                    <div class="book-card" onclick="window.location.href='../book/you_may_like/book1.html'">
+                        <img src="../image/you_may_like/book1.jpg" alt="Book 4" class="book-cover">
+                        <h3 class="book-title">The smear</h3>
+                        <p class="book-author">By John Beames</p>
+                        <div class="book-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+
+
+                    <div class="book-card" onclick="window.location.href='../book/2024/book7.html'">
+                        <img src="../image/2024/book_7.jpg" alt="Book 5" class="book-cover">
+                        <h3 class="book-title"> Dames</h3>
+                        <p class="book-author">By Murray Leinster</p>
+                        <div class="book-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>  
+                    </div>
+
+                    <div class="book-card" onclick="window.location.href='../book/you_may_like/book6.html'">
+                        <img src="../image/you_may_like/book6.jpg" alt="Book 6 " class="book-cover">
+                        <h3 class="book-title"> Tales</h3>
+                        <p class="book-author">By Luios</p>
+                        <div class="book-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>  
+                    </div>
+
+                </div>
+        
+                <div class="slider-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Book Info -->
+       
+        <div class="book-intro-section">
+            <div class="book-intro-container">
+                <!-- Image section now first -->
+                <div class="book-intro-image">
+                    <img src="../image/Coming_soon/Book_Cover5.jpg" 
+                         alt="Book Cover" 
+                         class="book-cover-large">
+                </div>
+        
+                <!-- Content section now second -->
+                <div class="book-intro-content">
+                    <div class="book-category">Coming Soon</div>
+                    <h1 class="book-main-title">The Lady Brewer of London</h1>
+                    
+                    <div class="book-author-info">
+
+                        <div class="author-details">
+                            <div class="author-name">The Locksmith's Daughter</div>
+                        </div>
+                    </div>
+        
+                    <p class="book-description">
+                        The Lady Brewer of London" is a historical fiction novel that tells the captivating story of a 
+                        resilient woman navigating the male-dominated world of brewing in 15th-century England. 
+                        Set against the gritty, vibrant backdrop of medieval London, the tale follows a determined 
+                        heroine who defies societal expectations and personal hardship to build a thriving brewery. 
+                    </p>
+        
+                    <div class="book-stats">
+                        <div class="stat-item">
+                            <!--<i class="fas fa-star"></i>-->
+                            <span> Release Date : 30/2/2028/span>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="book-intro-section">
+            <div class="book-intro-container">
+                <!-- Image section now first -->
+                <div class="book-intro-image">
+                    <img src="../image/Coming_soon/Book_Cover6.jpg" 
+                         alt="Book Cover" 
+                         class="book-cover-large">
+                </div>
+        
+                <!-- Content section now second -->
+                <div class="book-intro-content">
+                    <div class="book-category">Coming Soon</div>
+                    <h1 class="book-main-title">Little Women</h1>
+                    
+                    <div class="book-author-info">
+                        <div class="author-details">
+                            <div class="author-name">Louisa May Alcott</div>
+                        </div>
+                    </div>
+        
+                    <p class="book-description">
+                        Little Women" by Louisa May Alcott is a timeless coming-of-age novel that follows the lives of
+                        the four March sisters—Meg, Jo, Beth, and Amy—as they grow up in Civil War-era New England. 
+                        Each sister has a distinct personality and dream, from Jo's passion for writing to Amy's artistic ambitions,
+                        and together they navigate love, loss, poverty, and the challenges of womanhood.
+                    </p>
+        
+                    <div class="book-stats">                 
+                            <span> Release Date : 11/9/2025</span>   
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+         <div class="book-intro-section">
+            <div class="book-intro-container">
+                <!-- Image section now first -->
+                <div class="book-intro-image">
+                    <img src="../image/Coming_soon/Book_Cover7.jpg" 
+                         alt="Book Cover" 
+                         class="book-cover-large">
+                </div>
+        
+                <!-- Content section now second -->
+                <div class="book-intro-content">
+                    <div class="book-category">Coming Soon</div>
+                    <h1 class="book-main-title">The White Raven</h1>
+                    
+                    <div class="book-author-info">
+                        <div class="author-details">
+                            <div class="author-name">Carrie D.Miller</div>
+                        </div>
+                    </div>
+        
+                    <p class="book-description">
+                        Dive into the fascinating world of creative thinking with this groundbreaking book. 
+                        Discover how to unlock your creative potential and develop innovative solutions to 
+                        complex problems. Through practical exercises and real-world examples, learn the 
+                        techniques used by the world's most creative minds.
+                    </p>
+        
+                    <div class="book-stats">
+                        <div class="stat-item">
+                            <!--<i class="fas fa-star"></i>-->
+                            <span> Release Date : 30/9/2026</span>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About us  -->
+
+        <div class="about-section">
+            <div class="about-container">
+                <div class="about-content">
+                    <h2 class="about-title">About Us</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div class="info">
+                                <h3>Email</h3>
+                                <p>Book@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div class="info">
+                                <h3>Contact Us</h3>
+                                <p>+60 015-5858-5848</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="info">
+                                <h3>Address</h3>
+                                <p>Jalan Street </p>
+                                <p>96100, Sibu, Sarawak</p>
+                                <p>Malaysia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="../image/About_us/CompanyInfo.jpg" alt="Our Bookstore">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="../js/home_page.js"></script>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH8xyiOZufWJUwpWPjQwHLq7Iu1odAc7I",
+            authDomain: "skbook-d714f.firebaseapp.com",
+            databaseURL: "https://skbook-d714f-default-rtdb.firebaseio.com",
+            projectId: "skbook-d714f",
+            storageBucket: "skbook-d714f.firebasestorage.app",
+            messagingSenderId: "802609997862",
+            appId: "1:802609997862:web:3af2a67222d60873a5dee7",
+            measurementId: "G-H4QRWYC38E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+       // ... existing code ...
+
+// Notification functionality
+const notificationBtn = document.getElementById('notificationBtn');
+const notificationPopup = document.querySelector('.notification-popup');
+const closeNotification = document.querySelector('.close-notification');
+const notificationContent = document.querySelector('.notification-content');
+const notificationBadge = document.querySelector('.notification-badge');
+
+let unreadCount = 0;
+
+// Function to update notification badge
+function updateNotificationBadge() {
+    notificationBadge.textContent = unreadCount;
+    notificationBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
+}
+
+// Function to format time
+function formatTime(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Function to add a notification
+function addNotification(feedback) {
+    const notificationItem = document.createElement('div');
+    notificationItem.className = 'notification-item';
+    
+    const authorInitial = feedback.author.charAt(0).toUpperCase();
+    const formattedTime = formatTime(feedback.timestamp);
+    
+    notificationItem.innerHTML = `
+        <div class="notification-avatar">${authorInitial}</div>
+        <div class="notification-details">
+            <div class="notification-author">${feedback.author}</div>
+            <div class="notification-time">${formattedTime}</div>
+            <div class="notification-message">${feedback.content}</div>
+        </div>
+    `;
+    
+    notificationContent.insertBefore(notificationItem, notificationContent.firstChild);
+    unreadCount++;
+    updateNotificationBadge();
+}
+
+// Toggle notification popup
+notificationBtn.addEventListener('click', () => {
+    notificationPopup.classList.toggle('show');
+    if (notificationPopup.classList.contains('show')) {
+        unreadCount = 0;
+        updateNotificationBadge();
+    }
+});
+
+// Close notification popup
+closeNotification.addEventListener('click', () => {
+    notificationPopup.classList.remove('show');
+});
+
+// Close popup when clicking outside
+document.addEventListener('click', (e) => {
+    if (!notificationPopup.contains(e.target) && !notificationBtn.contains(e.target)) {
+        notificationPopup.classList.remove('show');
+    }
+});
+
+// Load initial notifications
+async function loadNotifications() {
+    try {
+        const feedbacksRef = ref(db, 'feedbacks');
+        const snapshot = await get(feedbacksRef);
+        
+        if (snapshot.exists()) {
+            const feedbacks = snapshot.val();
+            const recentFeedbacks = [];
+            
+            // Clear existing notifications
+            notificationContent.innerHTML = '';
+            
+            // Iterate through all users' feedbacks
+            Object.entries(feedbacks).forEach(([username, userFeedbacks]) => {
+                if (userFeedbacks) {
+                    Object.entries(userFeedbacks).forEach(([timestamp, feedback]) => {
+                        if (feedback && feedback.content) {
+                            recentFeedbacks.push({
+                                author: feedback.author || username,
+                                timestamp: parseInt(timestamp),
+                                content: feedback.content
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // Sort by timestamp (newest first) and take the 5 most recent
+            recentFeedbacks
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .slice(0, 5)
+                .forEach(feedback => addNotification(feedback));
+                
+            // Update unread count
+            unreadCount = recentFeedbacks.length;
+            updateNotificationBadge();
+        } else {
+            console.log('No feedbacks found in database');
+            notificationContent.innerHTML = '<div class="no-notifications">No feedbacks available</div>';
+        }
+    } catch (error) {
+        console.error('Error loading notifications:', error);
+        notificationContent.innerHTML = '<div class="error-message">Error loading notifications</div>';
+    }
+}
+
+// Load notifications when page loads
+document.addEventListener('DOMContentLoaded', loadNotifications);
+
+// ... rest of the existing code ...
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/about_us.css">
+   
+    
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="left-section">
+                <a href="#" class="logo-container" onclick="goToHomePage()">
+                    <i class="fas fa-book-open home-button"></i>
+                    <div class="logo-content">
+                        <div class="logo-text">SK<span>Book</span></div>
+                        <div class="logo-tagline">Discover Your Next Adventure</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="center-section">
+               <nav class="nav-links">
+                    <a href="../Main/Home_Page.html" class="nav-link">Home</a>
+                    <a href="../Main/Categories.html" class="nav-link">Books</a>
+                    <a href="../Main/About_Us.html" class="nav-link active">About Us</a>
+                </nav>
+            </div>
+
+            
+                <div class="auth-buttons">
+                    <button class="auth-button icon-btn" id="themeToggle" type="button">
+                    <i class="fas fa-sun"></i>
+                </button>
+                    <button class="auth-button icon-btn" id="notificationBtn" type="button">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <div class="notification-popup">
+                        <div class="notification-header">
+                            <h3>Recent Messages</h3>
+                            <button class="close-notification">×</button>
+                        </div>
+                        <div class="notification-content">
+                        </div>
+                    </div>
+                    <div class="language-selector">
+                        <button class="language-btn" id="languageToggle">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <div class="language-dropdown" id="languageDropdown">
+                            <a class="language-option" data-lang="en">English</a>
+                            <a class="language-option" data-lang="my">Bahasa Melayu</a>
+                            <a class="language-option" data-lang="zh">中文</a>
+                        </div>
+                    </div>
+                <a href="#" class= "auth-button profile-btn" onclick="goToRegister()">P</a>
+            </div>
+        </header>
+    </div>
+
+    <!-- About and Mission Section -->
+    <div class="about-mission">
+        <div class="about-section">
+            <h1>About Us</h1>
+            <p>Welcome to E-Book Library, your ultimate digital learning hub! Our platform is designed to provide easy
+               access to a vast collection of eBooks, empowering readers, students, and professionals to explore knowledge anytime, anywhere.</p>
+        </div>
+        <div class="mission-section">
+            <h1>Our Mission</h1>
+            <p>Our mission is to promote digital literacy and make knowledge accessible to everyone. 
+               Whether you are a student, researcher, or casual reader, E-Book Library is here to support your learning journey.</p>
+        </div>
+    </div>
+
+    <!-- Staff Section -->
+    <div class="staff-section">
+        <div class="staff-container">
+            <!-- Staff Member 1 -->
+            <div class="staff-card">
+                <div class="staff-image">
+                    <img src="../image/About_us/Profile.jpg" alt="Staff Member 1">
+                </div>
+                <div class="staff-info">
+                    <p><strong>Name: Ngu Ming Henn</strong></p>
+                    <p><strong>Email: minghenn04@gmail.com</strong></p>
+                    <p><strong>Contact number: 011-1094-1210</strong></p>
+                </div>
+            </div>
+
+            <!-- Staff Member 2 -->
+            <div class="staff-card">
+                <div class="staff-image">
+                    <img src="../image/About_us/Profile.jpg" alt="Staff Member 2">
+                </div>
+                <div class="staff-info">
+                    <p><strong>Name: Marcus Ting Zhong Sheng</strong></p>
+                    <p><strong>Email: marcus10@gmail.com</strong></p>
+                    <p><strong>Contact number: 011-3581-4845</strong></p>
+                </div>
+            </div>
+
+            <!-- Staff Member 3 -->
+            <div class="staff-card">
+                <div class="staff-image">
+                    <img src="../image/About_us/Profile.jpg" alt="Staff Member 3">
+                </div>
+                <div class="staff-info">
+                    <p><strong>Name: Chia Jong Jin</strong></p>
+                    <p><strong>Email: jong17@gmail.com</strong></p>
+                    <p><strong>Contact number: 014-9758-4747</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Information Section -->
+    <div class="company-info">
+        <div class="info-container">
+            <div class="company-image"> 
+                <img src="../image/About_us/UTS.jpg" alt="Company Image">
+            </div>
+            <div class="contact-details">
+                <h2>Company Information</h2>
+                <p><strong>Email:</strong> Book@gmail.com</p>
+                <p><strong>Contact number:</strong> +60 015-5858-5848</p>
+                <p><strong>Address:</strong> 96100 Jalan Street Sibu, Sarawak, Malaysia</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../js/about_us.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDH8xyiOZufWJUwpWPjQwHLq7Iu1odAc7I",
+        authDomain: "skbook-d714f.firebaseapp.com",
+        databaseURL: "https://skbook-d714f-default-rtdb.firebaseio.com",
+        projectId: "skbook-d714f",
+        storageBucket: "skbook-d714f.firebasestorage.app",
+        messagingSenderId: "802609997862",
+        appId: "1:802609997862:web:3af2a67222d60873a5dee7",
+        measurementId: "G-H4QRWYC38E"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Notification functionality
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationPopup = document.querySelector('.notification-popup');
+    const closeNotification = document.querySelector('.close-notification');
+    const notificationContent = document.querySelector('.notification-content');
+    const notificationBadge = document.querySelector('.notification-badge');
+
+    let unreadCount = 0;
+
+    // Function to update notification badge
+    function updateNotificationBadge() {
+        notificationBadge.textContent = unreadCount;
+        notificationBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+
+    // Function to format time
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Function to add a notification
+    function addNotification(feedback) {
+        const notificationItem = document.createElement('div');
+        notificationItem.className = 'notification-item';
+        
+        const authorInitial = feedback.author.charAt(0).toUpperCase();
+        const formattedTime = formatTime(feedback.timestamp);
+        
+        notificationItem.innerHTML = `
+            <div class="notification-avatar">${authorInitial}</div>
+            <div class="notification-details">
+                <div class="notification-author">${feedback.author}</div>
+                <div class="notification-time">${formattedTime}</div>
+                <div class="notification-message">${feedback.content}</div>
+            </div>
+        `;
+        
+        notificationContent.insertBefore(notificationItem, notificationContent.firstChild);
+        unreadCount++;
+        updateNotificationBadge();
+    }
+
+    // Toggle notification popup
+    notificationBtn.addEventListener('click', () => {
+        notificationPopup.classList.toggle('show');
+        if (notificationPopup.classList.contains('show')) {
+            unreadCount = 0;
+            updateNotificationBadge();
+        }
+    });
+
+    // Close notification popup
+    closeNotification.addEventListener('click', () => {
+        notificationPopup.classList.remove('show');
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!notificationPopup.contains(e.target) && !notificationBtn.contains(e.target)) {
+            notificationPopup.classList.remove('show');
+        }
+    });
+
+    // Load initial notifications
+    async function loadNotifications() {
+        try {
+            const feedbacksRef = ref(db, 'feedbacks');
+            const snapshot = await get(feedbacksRef);
+            
+            if (snapshot.exists()) {
+                const feedbacks = snapshot.val();
+                const recentFeedbacks = [];
+                
+                // Clear existing notifications
+                notificationContent.innerHTML = '';
+                
+                // Iterate through all users' feedbacks
+                Object.entries(feedbacks).forEach(([username, userFeedbacks]) => {
+                    if (userFeedbacks) {
+                        Object.entries(userFeedbacks).forEach(([timestamp, feedback]) => {
+                            if (feedback && feedback.content) {
+                                recentFeedbacks.push({
+                                    author: feedback.author || username,
+                                    timestamp: parseInt(timestamp),
+                                    content: feedback.content
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                // Sort by timestamp (newest first) and take the 5 most recent
+                recentFeedbacks
+                    .sort((a, b) => b.timestamp - a.timestamp)
+                    .slice(0, 5)
+                    .forEach(feedback => addNotification(feedback));
+                    
+                // Update unread count
+                unreadCount = recentFeedbacks.length;
+                updateNotificationBadge();
+            } else {
+                console.log('No feedbacks found in database');
+                notificationContent.innerHTML = '<div class="no-notifications">No feedbacks available</div>';
+            }
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+            notificationContent.innerHTML = '<div class="error-message">Error loading notifications</div>';
+        }
+    }
+
+    // Load notifications when page loads
+    document.addEventListener('DOMContentLoaded', loadNotifications);
+</script>
+</body>
+</html>

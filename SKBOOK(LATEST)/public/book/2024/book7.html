@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Header styles (same as Categories.html) */
+        .header {
+            background: #ffffff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* ... (copy other header styles from Categories.html) ... */
+
+        /* Book Details Styles */
+        .book-details-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+        }
+
+        .book-image-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .book-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .book-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .book-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .book-price {
+            font-size: 24px;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .book-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .chapters-section {
+            margin-top: 30px;
+        }
+
+        .chapters-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .chapters-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .chapter-number {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .chapter-title {
+            color: #333;
+        }
+
+        .purchase-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .buy-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .book-details-container {
+                grid-template-columns: 1fr;
+            }
+
+            .book-image-section {
+                position: static;
+            }
+
+            .book-image {
+                height: 400px;
+            }
+        }
+
+        /* Chapter Modal Styles */
+        .chapter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+        }
+
+        .chapter-modal-content {
+            position: relative;
+            background-color: white;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #007bff;
+        }
+
+        .chapter-content {
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .chapter-modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chapter-modal-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chapter-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #e9ecef;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Back Button Styles */
+        .back-button-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button i {
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .back-button-container {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as Categories.html) -->
+    <header class="header">
+        <!-- ... Copy header content from Categories.html ... -->
+    </header>
+
+    <div class="book-details-container">
+        <div class="book-image-section">
+            <img src="../../image/2024/book_7.jpg" alt="Book Cover" class="book-image">
+        </div>
+
+        <div class="book-info-section">
+            <h1 class="book-title">Dames</h1>
+            <p class="book-author">By Murray Leinster</p>
+
+            <div class="book-description">
+                <h2>Description</h2>
+                <p>
+                    The man who was presently to drown seemed to concentrate all his attention upon
+                    the mere feat of staying at the top of the water for as long a time as possible.
+                    But he had already been swimming for a very long time.
+                </p>
+            </div>
+
+            <div class="chapters-section">
+                <h2 class="chapters-title">Chapters</h2>
+                <div class="chapters-list">
+                    <div class="chapter-item" onclick="openChapter(1)">
+                        <div class="chapter-number">Chapter </div>
+                        <div class="chapter-title">The story talk about.....</div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Reading Modal -->
+    <div id="chapterModal" class="chapter-modal">
+        <div class="chapter-modal-content">
+            <span class="close-modal" onclick="closeChapter()">&times;</span>
+            <div class="chapter-modal-header">
+                <h2 id="modalChapterTitle" class="chapter-modal-title">Chapter 1: The Beginning</h2>
+            </div>
+            <div id="chapterContent" class="chapter-content">
+                <!-- Chapter content will be loaded here -->
+            </div>
+            <div class="chapter-navigation">
+                <button id="prevChapter" class="nav-button" onclick="navigateChapter(-1)">
+                    <i class="fas fa-arrow-left"></i> Previous Chapter
+                </button>
+                <button id="nextChapter" class="nav-button" onclick="navigateChapter(1)">
+                    Next Chapter <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button-container">
+        <div class="back-button" onclick="goBackToCategories()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+    </div>
+
+    <script>
+        class Book {
+            constructor(title, author, imageUrl, price, description) {
+                this.title = title;
+                this.author = author;
+                this.imageUrl = imageUrl;
+                this.price = price;
+                this.description = description;
+            }
+
+            displayBasicInfo() {
+                document.querySelector('.book-title').textContent = this.title;
+                document.querySelector('.book-author').textContent = `By ${this.author}`;
+                document.querySelector('.book-image').src = this.imageUrl;
+                document.querySelector('.book-image').alt = this.title;
+                document.querySelector('.book-price').textContent = `$${this.price.toFixed(2)}`;
+                document.querySelector('.book-description p').textContent = this.description;
+            }
+        }
+
+        class DetailedBook extends Book {
+            constructor(title, author, imageUrl, price, description, chapters) {
+                super(title, author, imageUrl, price, description);
+                this.chapters = chapters;
+            }
+
+            displayChapters() {
+                const chaptersContainer = document.querySelector('.chapters-list');
+                chaptersContainer.innerHTML = ''; // Clear existing chapters
+
+                this.chapters.forEach(chapter => {
+                    const chapterElement = document.createElement('div');
+                    chapterElement.className = 'chapter-item';
+                    chapterElement.onclick = () => this.openChapter(chapter.number);
+                    chapterElement.innerHTML = `
+                        <div class="chapter-number">Chapter ${chapter.number}</div>
+                        <div class="chapter-title">${chapter.title}</div>
+                    `;
+                    chaptersContainer.appendChild(chapterElement);
+                });
+            }
+
+            openChapter(chapterNum) {
+                try {
+                    const chapterContent = this.chapters.find(ch => ch.number === chapterNum).content;
+                    document.getElementById('chapterContent').innerHTML = chapterContent;
+                    document.getElementById('chapterModal').style.display = 'block';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling of background
+                } catch (error) {
+                    console.error("Error opening chapter:", error);
+                }
+            }
+        }
+
+        function openChapter(chapterNum) {
+            currentChapter = chapterNum;
+            const modal = document.getElementById('chapterModal');
+            const modalTitle = document.getElementById('modalChapterTitle');
+            const chapterContent = document.getElementById('chapterContent');
+            const prevButton = document.getElementById('prevChapter');//if any chapter
+            const nextButton = document.getElementById('nextChapter');// if any 
+
+            modalTitle.textContent = `Chapter ${chapterNum}: ${getChapterTitle(chapterNum)}`;
+            chapterContent.innerHTML = chapterContents[chapterNum];
+
+            // Update navigation buttons
+            prevButton.disabled = chapterNum === 1;
+            nextButton.disabled = chapterNum === totalChapters;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling of background
+        }
+
+        function closeChapter() {
+            const modal = document.getElementById('chapterModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        function navigateChapter(direction) {
+            const newChapter = currentChapter + direction;
+            if (newChapter >= 1 && newChapter <= totalChapters) {
+                openChapter(newChapter);
+            }
+        }
+
+        function getChapterTitle(chapterNum) {
+            const titles = {
+                1: 'The Beginning',
+               
+            };
+            return titles[chapterNum];
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chapterModal');
+            if (event.target === modal) {
+                closeChapter();
+            }
+        }
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (document.getElementById('chapterModal').style.display === 'block') {
+                if (event.key === 'Escape') {
+                    closeChapter();
+                } else if (event.key === 'ArrowLeft') {
+                    navigateChapter(-1);
+                } else if (event.key === 'ArrowRight') {
+                    navigateChapter(1);
+                }
+            }
+        });
+
+       
+        function goBackToCategories() {
+            window.location.href = '../../Main/Categories.html';
+        }
+
+
+      
+        let currentChapter = 1;
+        const totalChapters = 1;
+
+        // Sample chapter content - In a real application, this would come from a database
+        const chapterContents = {
+            1: `
+
+            
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"><style>
+#pg-header div, #pg-footer div {
+    all: initial;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 2em;
+}
+#pg-footer div.agate {
+    font-size: 90%;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+#pg-footer li {
+    all: initial;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-indent: -0.6em;
+}
+#pg-footer div.secthead {
+    font-size: 110%;
+    font-weight: bold;
+}
+#pg-footer #project-gutenberg-license {
+    font-size: 110%;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+#pg-header-heading {
+    all: inherit;
+    text-align: center;
+    font-size: 120%;
+    font-weight:bold;
+}
+#pg-footer-heading {
+    all: inherit;
+    text-align: center;
+    font-size: 120%;
+    font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#pg-header #pg-machine-header p {
+    text-indent: -4em;
+    margin-left: 4em;
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: medium
+}
+#pg-header #pg-header-authlist {
+    all: initial;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#pg-header #pg-machine-header strong {
+    font-weight: normal;
+}
+#pg-header #pg-start-separator, #pg-footer #pg-end-separator {
+    margin-bottom: 3em;
+    margin-left: 0;
+    margin-right: auto;
+    margin-top: 2em;
+    text-align: center
+}
+
+    .xhtml_center {text-align: center; display: block;}
+    .xhtml_center table {
+        display: table;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        }</style><meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Dames | Project Gutenberg</title>
+    <link href="images/cover.jpg" rel="icon" type="image/x-cover" id="id-2404213551503011810">
+    <style>body {
+    text-align: justify;
+    font-size: 1.1em
+    }
+@media screen {
+    body {
+        margin-left: 8%;
+        margin-right: 8%
+        }
+    }
+.pagedjs_page_content > div {
+    margin-left: 8%;
+    margin-right: 8%
+    }
+p {
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    text-indent: 1em
+    }
+.ni {
+    text-indent: 0
+    }
+.tb {
+    border: none;
+    border-bottom: 1px solid black;
+    margin: 1em auto 1em 20%;
+    width: 60%
+    }
+h1 {
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: normal;
+    margin-bottom: 0.2em
+    }
+blockquote {
+    margin-bottom: 1.6em;
+    font-size: 0.9em;
+    font-style: italic
+    }
+blockquote p {
+    text-indent: 0
+    }
+.tac {
+    text-align: center
+    }
+.fs12 {
+    font-size: 1.2em
+    }
+.sb {
+    text-indent: 0;
+    margin-top: 2em
+    }
+.tn {
+    font-size: 0.9em;
+    border: 1px solid silver;
+    margin-top: 1.8em;
+    margin-left: 10%;
+    width: 80%;
+    background-color: #DDE
+    }
+.tn p {
+    text-indent: 0;
+    text-align: left;
+    padding: 0.25em 0.4em
+    }
+.illustration70 {
+    width: 70%
+    }
+.illustration70 img {
+    display: block;
+    margin: 1em 15%;
+    max-width: 100%;
+    height: auto
+    }
+hr.tb {
+    border: none;
+    text-align: center;
+    height: auto;
+    margin: 1em auto;
+    display: flex;
+    justify-content: center
+    }
+hr.tb::after {
+    content: "*        *        *        *        *";
+    white-space: pre;
+    display: block;
+    text-align: center
+    }</style>
+<link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
+<link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+<meta name="dc.title" content="Dames">
+<meta name="dc.language" content="en">
+<meta name="dcterms.source" content="https://www.gutenberg.org/files/75758/75758-h/75758-h.htm">
+<meta name="dcterms.modified" content="2025-03-31T14:00:08.862001+00:00">
+<meta name="dc.rights" content="Public domain in the USA.">
+<link rel="dcterms.isFormatOf" href="http://www.gutenberg.org/ebooks/75758">
+<meta name="dc.creator" content="Leinster, Murray, 1896-1975">
+<meta name="dcterms.created" content="2025-03-31">
+<meta name="generator" content="Ebookmaker 0.13.6 by Project Gutenberg">
+<meta property="og:title" content="Dames">
+<meta property="og:type" content="Text">
+<meta property="og:url" content="https://www.gutenberg.org/cache/epub/75758/pg75758-images.html">
+<meta property="og:image" content="https://www.gutenberg.org/cache/epub/75758/pg75758.cover.medium.jpg">
+</head>
+<body><section class="pg-boilerplate pgheader" id="pg-header" lang="en"><h2 id="pg-header-heading" title="">The Project Gutenberg eBook of <span lang="en" id="pg-title-no-subtitle">Dames</span></h2>
+    
+<div>This ebook is for the use of anyone anywhere in the United States and
+most other parts of the world at no cost and with almost no restrictions
+whatsoever. You may copy it, give it away or re-use it under the terms
+of the Project Gutenberg License included with this ebook or online
+at <a class="reference external" href="https://www.gutenberg.org">www.gutenberg.org</a>. If you are not located in the United States,
+you will have to check the laws of the country where you are located
+before using this eBook.</div>
+
+<div class="container" id="pg-machine-header"><p><strong>Title</strong>: Dames</p>
+<div id="pg-header-authlist">
+<p><strong>Author</strong>: Murray Leinster</p>
+</div>
+<p><strong>Release date</strong>: March 31, 2025 [eBook #75758]</p>
+
+<p><strong>Language</strong>: English</p>
+
+<p><strong>Original publication</strong>: New York, NY: Short Stories, Inc, 1939</p>
+
+<p><strong>Credits</strong>: Roger Frank and Sue Clark</p>
+
+</div><div id="pg-start-separator">
+<span>*** START OF THE PROJECT GUTENBERG EBOOK DAMES ***</span>
+</div></section><div style="text-align:center"></div>
+
+
+<h1 style="font-variant:small-caps;">Dames</h1>
+
+<div style="text-align:center;">
+By MURRAY LEINSTER
+</div>
+
+<div style="text-align:center;font-size:0.9em;font-style:italic;">
+Author of “Buck Comes Home,” etc.
+</div>
+
+<blockquote><div>
+The Man Swimming In the Fog Found Himself in As Much of
+a Fog in Another Matter. Hell—Dames!
+</div></blockquote>
+
+<p>Even before the echoes came, the man felt gloomily certain that he was
+going to drown. When they did come, the nearest one—the one on which
+his hopes were set—was definitely farther away than it had been. And
+that meant that it was quite useless to swim. A current was carrying him
+away from whatever headland echoed the distant steamer’s fog-horn.</p>
+
+<p>He could not see anything. A thick pall of mist hung about him,
+curiously tinted by an unseen sun. It allowed him to view a circle
+twenty feet from his eyes in every direction. In that circle there was
+nothing but oily water, stirring sluggishly in long swells of
+complicated outline. The distant steamer hooted, and echoes came, and
+somewhere he heard the staccato beat of a power-boat’s motor. Fishermen
+in the Inside Passage take no account of fog. But the power boat was far
+away, and the nearest echo was still farther this time than before, and
+the man knew more gloomily still that there was no possible way for him
+to escape drowning.</p>
+
+<p>He turned on his back to float. He had not shed his clothing before, and
+it was too late to do it now. He had to paddle to keep his head
+above-water. When his strength gave out and he could not paddle any
+longer, he would drown. He swore a little—rather resentfully than in
+desperation—and paddled. Only his face showed drawn and weary.</p>
+
+<p>The steamer’s fog-horn grew more distant and more distant still. The
+echoes grew fainter. The man who was presently to drown seemed to
+concentrate all his attention upon the mere feat of staying at the top
+of the water for as long a time as possible. But he had already been
+swimming for a very long time. Presently he struggled a little. His face
+went under. He thrashed, and ripples spread about him. He floated once
+more. He spat out water, weakly, and continued to paddle.</p>
+
+<p>His eyes were peevish, and once he spoke aloud to the encircling mist.
+One word, and that with a scornful bitterness: “Dames!” It was as if he
+epitomized his own life. His ears were below the surface, so he heard
+nothing at all. There was little to hear except the single staccato
+power boat. But he did not even hear that. He paddled.</p>
+
+<p>He went under again. Again he thrashed, and floated once more. But he
+was near the end. Presently his mouth opened convulsively. The motor
+boat was near, but he was hardly able to hear it. He went under. His
+arms thrashed feebly. He came up and made choked sounds. He came up yet
+again and uttered a cry which was not altogether human. From that time
+onward it seemed as if his body fought for life without any help from
+his intelligence. He fought the water blindly. He splashed weakly, and
+struggled and writhed.</p>
+
+<p>The cry and the splashing was enough to cause the power boat to swerve.
+It came gliding out of the mist just as the struggles of the exhausted
+body were about to cease. A hand reached out swiftly and stayed the
+sinking of that body. A rather small hand, but a capable one. The
+putt-putt-putting of the motor stopped. Then a dim figure in the mist
+struggled manfully to draw the utterly limp figure of the swimmer into
+the boat.
+
+</p><hr class="tb">
+
+<p>He dropped on the floor-boards of the power boat and watched with a
+desperate alertness for some sign of suspicion or of doubt in his
+rescuer. A girl had rescued him. If she was pretty, he did not notice
+it. For one reason, he was exhausted.</p>
+
+<p>She reached forward to the engine and cut the ignition. She listened
+sharply to the racket of echoes that came back through the fog, even
+after their source had ceased. She cut the spark in again before the
+fly-wheel had stopped. The engine resumed with a valorous uproar. She
+considered, frowning. Then her face cleared.</p>
+
+<p>“About right.”</p>
+
+<p>She swung the tiller. The man understood. She was using the echoes as he
+had tried to use them; as the steamer no longer audible used them; as a
+means of guidance in the fog. The boat swerved. Wraiths of mist flowed
+past. The fog remained impenetrable. The world seemed curiously hushed,
+save for the racket of the motor and its echoes.</p>
+
+<p>“I came over from the mainland,” said the girl. “On my way the fog came
+down, but I kept on. We’re used to it, around here.”</p>
+
+<p>“Where are you takin’ me?” asked the man.</p>
+
+<p>“Home,” said the girl briefly. “I’ve got to attend to the chickens.
+Maybe the fog’ll lift and I can get you back to the mainland before
+long. Ours is the only house on our island. Is it important for you to
+get back quickly?”</p>
+
+<p>The man hesitated. Then he said, “I don’t know. It depends on what”—he
+licked his lips—“on what my prisoner did.”</p>
+
+<p>The girl peered at him through the mist.</p>
+
+<p>“Prisoner?”</p>
+
+<p>“I’m a sort of G-man,” said the man, not altogether convincingly. “I was
+takin’ a prisoner down to Seattle by boat. We were up on deck together
+an’ I wasn’t looking close, so—well, I guess he slugged me. The first
+thing I knew I was in the water an’ the steamer was a long way off. I
+heard echoes an’ I headed for ’em, swimmin’. It was the only chance I
+had.”</p>
+
+<p>The girl looked at him again. She cut the motor momentarily. The echoes
+were deafening in the interval before the resumption of the motor-roar.</p>
+
+<p>“You did pretty well, at that,” she observed. “What do you think your
+prisoner did?”</p>
+
+<p>“He—uh—well,” said the man lamely, “maybe he jumped over himself, with
+a life-preserver. Or maybe he just hid. Without me to raise a fuss, he
+might just walk ashore when the steamer docks.”
+
+</p><hr class="tb">
+
+<p>Through the racket of the motor there came the staggered beating of an
+echo almost as loud as the motor itself. The girl cut off the engine
+altogether. Echoes resounded startlingly, and as startlingly died away
+to nothing. The power boat went on of its own momentum, with a sound of
+bubbling at its bow. There was a curious, muffled silence. Then the
+boat’s keel grated loudly on sand and pebbles. It stopped short,
+crunching.</p>
+
+<p>“Here we are,” said the girl.</p>
+
+<p>The man got up with tremendous effort. The girl sat still for an
+instant. She regarded him steadily.</p>
+
+<p>“Did you ever hear of Butch Traynor?” The man jerked his head around.</p>
+
+<p>“Butch Traynor? No. Why?”</p>
+
+<p>“I just wondered,” said the girl. “You G-men ought to get after him.”</p>
+
+<p>The man got out of the boat into six inches of water. The feel of
+solidness under his feet was peculiar. He saw a stretch of sand, with
+ripples lapping at it. A vaguely darker area in the fog which was
+probably a headland. He hauled tiredly at the boat. The girl stepped up
+to the bow and jumped lightly ashore. The man followed her up on the
+beach and tethered the boat to stakes—drying-stakes for nets—which
+came close down to the water’s edge. The girl vanished. Moving about,
+the man saw vague shapes dimly through the mist. Rocks. A boat drawn up
+and turned over for repair. He heard cacklings somewhere near. A minor
+tumult of flapping, unseen wings. The clatter of a tin pan. He heard the
+girl moving about. A door opened and closed. Presently a pump squeaked.
+All this in invisibility.</p>
+
+<p>He blundered toward the noises. The girl started when she saw him. She
+made a swift, frightened movement. Then she said:</p>
+
+<p>“Oh, it’s you!”</p>
+
+<p>She turned away. He said, almost humbly:</p>
+
+<p>“Is there any chance of gettin’—uh—some dry clo’es?”</p>
+
+<p>She hesitated.</p>
+
+<p>“I suppose so. I’ll look.”</p>
+
+<p>She moved off through the mist. He followed her, chilled and exhausted.
+He saw a house take form gradually through the fog. A small house,
+hardly more than a cabin. Three—four rooms, perhaps. There was
+something missing, though. It was seconds before the man realized that
+there was no smoke coming from the chimney. The fog was undisturbed
+above the stubby brick stack.</p>
+
+<p>She came out of the house. She stood quite still. After an instant he
+identified the pose. She was listening. He listened, too. No sound
+except the formless noises of a flock of newly-fed fowl. The indefinite,
+liquid sound of the water about the boat. Occasional, unrythmic tapping
+noises which were the drips of condensed mist from overhanging objects.</p>
+
+<p>“You can go in,” said the girl briefly “The room on the right. I’ve put
+out some of my father’s things. They won’t fit so well, but they’re
+dry.”</p>
+
+<p>The man went inside the cabin. The smell was of emptiness. The house was
+furnished frugally, but it had not the odor of occupancy. He went into
+the room on the right. There were clothes laid out. Fisherman’s clothes.
+He stripped off his own wet garments and clothed himself in them. He went
+out again.</p>
+
+<p>The girl was standing on the tiny porch, again, listening. She held up
+her hand.</p>
+
+<p>“Wait!—I think I hear a boat.”
+
+</p><hr class="tb">
+
+<p>The man strained his ears. He heard nothing but the same muffled sounds
+of the fog; ripples on the beach, and irregular dripping impacts, and
+the noise of the chickens feeding. But as the girl stood immobile, her
+face frowningly intent, he thought he heard a motor too. He could not be
+sure if it was real or imaginary. In any case it was infinitely faint.</p>
+
+<p>“I’m not sure,” said the girl abruptly. Then she added, with a trace of
+grimness, “If it is a boat, it’s Butch Traynor.”</p>
+
+<p>The man said:</p>
+
+<p>“This Butch Traynor. You mean he might come here? An’—uh—you don’t
+want him to?”</p>
+
+<p>“Yes,” said the girl.</p>
+
+<p>She made an impatient, irresolute gesture.</p>
+
+<p>“But,” said the man, “what does he want?”</p>
+
+<p>The girl said, “Me.”</p>
+
+<p>“But——”</p>
+
+<p>“Have you got a revolver?” she demanded.</p>
+
+<p>He shook his head.</p>
+
+<p>“I guess—I guess my pris’ner took it after he’d knocked me out.” Then
+he added uneasily, “This—uh—Butch Traynor—”</p>
+
+<p>“He says he wants to marry me,” said the girl hardly. “He says so! But
+he’s got a bad name, and he’s earned it. If a man cuts another man’s
+fishing-nets away, he’s pretty low. Butch Traynor’s done that.</p>
+
+<p>“He’s done other things. There’s talk of a killing or two that can’t be
+proved on him. And he says he wants to marry me!”</p>
+
+<p>“But—uh—”</p>
+
+<p>“If you want to believe it,” said the girl. She added fiercely, “He says
+he’ll make me! My father made him stop coming here, but if he thought I
+was here alone he’d come after me. He says he’s going to make me marry
+him. You figure out how!”</p>
+
+<p>The man made an uneasy gesture.</p>
+
+<p>“My father broke his leg,” said the girl resentfully. “A bad break. We
+had to take him over to the mainland. My mother’s staying there with
+him. I’ve been coming back here every day or so to attend to the
+chickens. If Butch Traynor heard I came over today—”</p>
+
+<p>She stopped, again to listen. Her brow was dark. The man did not look at
+her, though she was good enough to look at. Sun-browned and full-bodied
+and firm-fleshed and young. Her hands clenched.</p>
+
+<p>She seemed almost to tremble with inner rage. But she listened keenly.</p>
+
+<p>“We could start back now,” said the man uneasily. “He couldn’t see you
+in the fog. You could use a—compass, maybe. An’ he would go right past
+you without knowin’ it.”</p>
+
+<p>“With a motor making as much noise as mine does?” demanded the girl.
+“His boat’s faster, too.”</p>
+
+<p>“You could listen for his engine,” said the man urgently, “an’ if you
+heard it, cut yours off an’ drift. He couldn’t find you then!”</p>
+
+<p>“I’ve got to attend to things here!” said the girl fiercely. “This is
+all we have to live on, while my father’s helpless.”
+
+</p><hr class="tb">
+
+<p>She moved off into the mist. The man stood still. Twice he licked his
+lips affrightedly as if at some inner vision. The girl opened the door
+of some invisible structure behind the pall of white. The man heard her
+moving about. She went to the chicken-yard again. More cacklings and
+flutterings. She was in the chicken-yard for a long time. Time always
+passes more slowly to a man when he is waiting for a woman to accomplish
+something in which he takes no interest. To this man it seemed an age,
+an aeon, in which he stood in the blank white fog while indefinite
+noises told of cryptic things the girl was doing. Gathering eggs;
+doubtless. Filling water-trays; probably. Refilling whatever devices
+gave the chickens feed. Doing this thing and that.</p>
+
+<p>It seemed hours that he stood there, alone. Actually, he was so weary
+that it was painful merely to stand. And he listened more for the
+completion of the girl’s tasks than for any outer sound, so that when he
+did notice the noise of a motor it was very near. It was not faint. It
+was not distant. It was a plainly audible chugg-chugg-chugg-chugg that
+was steady and rhythmic and coming closer.</p>
+
+<p>He heard it, startled. He went in search of the girl, calling guardedly.
+He came upon her standing with a bucket of eggs in her hand, listening
+as he had listened. Her eyes were bright and hard. She breathed quickly.</p>
+
+<p>“I heard a boat,” said the man, uncertainly.</p>
+
+<p>“It’s Butch Traynor,” said the girl, tight-lipped. “I know the motor.
+He’s—after me.”</p>
+
+<p>“We can—uh—get your boat started,” said the man.</p>
+
+<p>“Are you afraid?” she asked bitterly.</p>
+
+<p>“I don’t want any more trouble,” said the man, humbly. “I had plenty
+already.”</p>
+
+<p>The girl said in queenly scorn, “Go and hide, then! I’ll——”</p>
+
+<p>She put down the bucket and hurried away into the mist. The man
+followed, again and very tiredly. He saw her coming out of the cottage.
+She thrust something out of sight inside her dress. The man saw the
+glint of steel. A knife, probably.</p>
+
+<p>“Go and hide!” she repeated bitterly. “He’d be bound to catch up to me
+some time. He’s been following me around long enough!”</p>
+
+<p>She hurried away once more, deathly pale, her hands shaking, her eyes
+like flames. The man went slowly after her. He had been exhausted. He
+was not much less than exhausted now.
+
+</p><hr class="tb">
+
+<p>The sound of the motor out on the water stopped abruptly. It started
+again, and stopped, and started. For echoes.</p>
+
+<p>Its timbre changed. The boat out there in the white mist had changed
+its course. Now echoes came from every side through the fog; sharp and
+ringing repetitions of the motor’s sound. And now, too, and very
+abruptly, the color of the mist altered. It had been faintly golden from
+an unseen sun. That golden tint deepened.</p>
+
+<p>The man reached the sand-and-pebble beach and saw the girl standing in
+desperate defiance, facing the water. The oily ripples of the little bay
+were blue, now, instead of slaty gray.</p>
+
+<p>The motor in the invisible boat cut off. A man moved, out there in the
+fog. There were bubbling sounds, of a cutwater parting the surface. A
+grinding sound. A shadow in the mist.
+
+</p><hr class="tb">
+
+<p>The man moved heavily toward the source of the sound. A figure loomed
+through the now-golden fog, running along the beach. The man looked at a
+drawn, unshaven face which stared at him unbelievingly.</p>
+
+<p>“Who the hell are you?” demanded a taut voice.</p>
+
+<p>The man who had so nearly drowned said hungrily:</p>
+
+<p>“Listen! They tell me you’re in trouble with the law. You bumped off a
+couple men—”</p>
+
+<p>“Who the hell are you?” cried Butch Traynor fiercely. “What’re you doing
+here? Where’s Ellen? What’ve you done with her?”</p>
+
+<p>“N-nothin’,” said the man. He swallowed, and went on desperately.
+“Listen! If you’re in trouble with the law—”</p>
+
+<p>The girl’s voice came, strained and defiant:</p>
+
+<p>“You Butch Traynor, what’re you doing on our land? Didn’t my father tell
+you to stay away?”</p>
+
+<p>The new man said savagely, “I came here for you, and by God I’m going to
+take you away with me!”</p>
+
+<p>“Listen!” said the man from the water, desperately, “If you’re in
+trouble with the law, I want to—”</p>
+
+<p>Butch Traynor went swiftly to the girl. He seized her two arms in his
+hands and said hoarsely:</p>
+
+<p>“I’ve argued enough! I can’t stand any more! I won’t stand any more! Are
+you comin’ peaceful, or—”</p>
+
+<p>The girl did not shrink. She cried passionately:</p>
+
+<p>“If you did carry me off, if I couldn’t kill you I’d kill myself! But
+you won’t! That man there is a detective. A Federal man! He’s seen
+enough now—”</p>
+
+<p>Butch Traynor turned upon the man who had so nearly been drowned. He was
+a young man, Butch Traynor. His muscles were hard and his jaw was
+craggy. His clothes were rough and his manner grim. He looked at the man
+from the water. Then he released the girl and came purposefully toward
+him. His hands worked.</p>
+
+<p>“Listen!” said the man from the water, humbly. “She’s got me wrong. She
+picked me up from the water just now, drownin’. I’d jumped off the
+steamer for Seattle. I ain’t a G-man. I’m—”
+
+</p><hr class="tb">
+
+<p>Butch Traynor stared at him with little ugly lights in his eyes; the
+battle light of the male who is brought to desperation by a woman and
+seeks combat as a necessary, explosive alleviation of his state. He
+continued to advance. The small waves rippled on the shore. The
+fog-wraiths drifted by, damp and clammy and golden-white from the
+sunlight above. The girl stood still. Butch Traynor was very near,
+crouched a little, his lips twisted in a silent snarl.</p>
+
+<p>“Listen!” stammered the man from the water. “I—bumped off a guy an’
+beat it. They caught me up in Seward. A bull was bringin’ me down to
+Seattle for trial an’—an’ I jumped off the ship. Tryin’ to make a
+getaway. I’d rather die drownin’ than go through with all that. If you
+got trouble with the law, like she said—”</p>
+
+<p>Butch Traynor put out his hands and closed them about the other man’s
+throat. The knees of the man from the water buckled under him. “Say,
+listen!” he panted, choking. “Listen—”</p>
+
+<p>He sagged to the ground as Butch Traynor contemptuously released him.
+Butch Traynor went back to the girl.</p>
+
+<p>“Your brave defender,” he said bitterly, “won’t fight. I’m taking you
+along. You can walk to the boat if you will. You might want to. But
+you’re going!”</p>
+
+<p>The man from the water beat on the ground with his fists, raging
+suddenly. Then he got heavily to his feet.</p>
+
+<p>“I’ll kill you,” cried the girl fiercely, “or else myself! You know I
+will!”</p>
+
+<p>“You lie,” said Butch Traynor with an elaborate, raging courtesy, “you
+used to care for me. Then you got some damned idea in your head—”</p>
+
+<p>“Beast!” panted the girl. “Take your hands off me!”</p>
+
+<p>“Then walk! To the boat!”</p>
+
+<p>There was the sound of a scuffle. The man from the water clutched a
+heavy stone. He made whispering, raging noises to himself. He moved very
+heavily—exhaustedly—through the mist to the two figures who swayed
+together. The girl cried out in a voice filled with hate:</p>
+
+<p>“I tell you—”</p>
+
+<p>The man from the water raised his stone and struck terribly, from
+behind. It should have crushed in Butch Traynor’s skull. But an
+unexpected movement, in the struggle with the girl, made it partly miss.
+It did not brain Butch Traynor. Instead, the stone only scraped his
+skull. But it landed with paralyzing force upon his shoulder.</p>
+
+<p>It numbed that whole arm. And the girl, struggling, jerked free her
+hand. It darted out of sight and back into view again. Steel flashed. It
+struck. Butch Traynor swore. His right arm had been numbed before the
+stroke landed.</p>
+
+<p>Then the girl gasped.
+
+</p><hr class="tb">
+
+<p>There was a half-second of silence. The man from the water half drew
+back in panic as Butch Traynor whirled upon him. Desperately he raised
+the stone again. Then something like a wildcat sprang upon him. It was
+the girl. She swarmed upon the man with the stone, striking and
+scratching and crying out incoherently. He gave back dazedly, and
+dropped the stone, and would have run away but that he tripped and fell
+sprawling.</p>
+
+<p>Butch Traynor pulled her off. There was blood running down his shirt,
+and at sight of it the girl cried out again and struggled to be free.
+But her panted rage was directed at the man from the water.</p>
+
+<p>“He’d have killed you, Butch!” she gasped fiercely. “He tried to brain
+you from behind! He—”</p>
+
+<p>“Yeah,” said Butch Traynor savagely, “while you knifed me from the
+front!”</p>
+
+<p>The blood on his shirt spread rapidly. The girl went deathly pale.</p>
+
+<p>“I’ll—I’ll bandage it, Butch. I—thought you’d catch my hand. I—knew
+you were strong and quick.”</p>
+
+<p>Butch Traynor’s face was very savagely grim.</p>
+
+<p>“Go get the bandage,” he ordered curtly. “No need bleedin’. An’ no need
+of your lyin’, either. Go on!”</p>
+
+<p>She turned. She ran. She came back with white cloth she was tearing into
+strips as she ran. The man on the ground watched dumbly. Then a look of
+cunning expectation came on his face. It oddly matched the granite-like
+expression on the face of Butch Traynor. The girl was panting—half
+sobbing.</p>
+
+<p>“I hurried, Butch,” she said desperately. “Is it still bleeding?”</p>
+
+<p>Butch Traynor’s jaws clamped tightly.</p>
+
+<p>“Maybe,” he said deliberately, “maybe I’d better do the bandagin’
+myself. You might have some kinda trick in mind. You used to care some
+about me, but now—”</p>
+
+<p>“I do!” panted the girl, more desperately still. Her fingers trembled as
+she tore at his ripped shirt to bare the wound she herself had made.
+“I—I do! Listen, Butch! Granny Holmes told you I was coming over here
+today. She told you I’d be by myself! Did—didn’t she?”</p>
+
+<p>He watched her grimly, while she swiftly made a compress and put it in
+place with shaking hands.</p>
+
+<p>“I told her to do it,” she panted. “We’d—quarreled. And—I wouldn’t
+give in. But—I wanted you to make me give in! Don’t you see? If you
+loved me enough you wouldn’t let me lose you! You’d—you’d make me marry
+you!”</p>
+
+<p>Butch Traynor regarded her as grimly as before. He was young, and his
+face was drawn. He looked at her with no softening of his expression.</p>
+
+<p>“L-listen, Butch!” she cried. “There’s that man there! I—picked him up,
+swimming. He told me he was a G-man. But he told you he’s an—an escaped
+prisoner. There’ll be a reward for him! You can—get money for taking
+him in. I’ll tie him up for you! I’ll run the boat! I’ll do anything—”</p>
+
+<p>“How about marryin’ me?” asked Butch Traynor grimly.</p>
+
+<p>She clung to him, pressing close. And she sobbed.</p>
+
+<p>“Oh, Butch! Yes! Please! Please!”
+
+</p><hr class="tb">
+
+<p>The fog was thinner. Instead of a horizon of twenty feet, with all
+beyond it emptiness, now one could see almost forty feet with clarity,
+and distinguish vague shapes at sixty. The golden tint was more
+pronounced. The waves were still oily, and the small uncertain swells
+were still mere undersurface surgings of the water. Now and again
+irregular lanes of clear vision opened in the mist. Some times one might
+see, momentarily, for as much as a hundred yards.</p>
+
+<p>The shore, though, remained quite unseen until the power boat was almost
+upon it. Then Butch Traynor cut the ignition. The two boats—the
+rearmost one towed—went on with diminishing speed until the prow of the
+first touched land.</p>
+
+<p>“You get out here,” said Butch Traynor grimly. “I don’t know anything
+about you, an’ I don’t want to know. But I’m not havin’ my wife in court
+tellin’ how she picked you up swimmin’. Get out!”</p>
+
+<p>The man from the water got up shakily. But he stopped to say in a last
+flicker of hope:</p>
+
+<p>“Listen! She said y’were in trouble with the law. An’ if y’ are, why—”</p>
+
+<p>“Hell!” said Butch Traynor. “You can’t believe a crazy woman. She was
+crazy. Crazy mad. With me. That’s all.”</p>
+
+<p>The girl said urgently, “He tried to kill you, Butch! You oughtn’t let
+him go!”</p>
+
+<p>“So did you try to kill me,” said Butch Traynor curtly. To the man he
+added, “Git!”</p>
+
+<p>He shoved off the boat with his one good arm. The man from the water
+heard its motor catch. It backed out, with the other, empty boat bumping
+clumsily about it. It started off down the coast. The man on shore saw
+it move into one of the erratic lanes of clearness in the golden mist.
+Sunlight actually struck upon it. The two figures in it were clearly
+visible. The girl sat almost humbly before the man, who held the tiller.
+Just before they vanished in the lessening mist, she reached over and
+stroked his hand hopefully.</p>
+
+<p>The man on shore turned. The mist was thinning. Before it thinned too
+much he had to be far away and hidden. He had to stay hidden until the
+world believed him drowned. His chances were not excellent, but they
+were fair. He began to climb the leaf-littered bank, on the top of which
+virgin timber began.</p>
+
+<p>But as he climbed and before he became absorbed again in the business of
+being a fugitive, for one fleeting instant he thought of the pair he had
+just left. And he spat.</p>
+
+<p>“Dames!” said the murderer disgustedly. “Hell!”</p>
+
+<div class="tn">
+<p>Transcriber’s note: This story appeared in the August 10, 1939 issue
+of <i>Short Stories</i> magazine.</p>
+</div>
+
+<div style="text-align:center"></div><section class="pg-boilerplate pgheader" id="pg-footer" lang="en">
+<div id="pg-end-separator">
+<span>*** END OF THE PROJECT GUTENBERG EBOOK DAMES ***</span>
+</div>
+
+    
+<div>
+Updated editions will replace the previous one—the old editions will
+be renamed.
+</div><div>
+Creating the works from print editions not protected by U.S. copyright
+law means that no one owns a United States copyright in these works,
+so the Foundation (and you!) can copy and distribute it in the United
+States without permission and without paying copyright
+royalties. Special rules, set forth in the General Terms of Use part
+of this license, apply to copying and distributing Project
+Gutenberg™ electronic works to protect the PROJECT GUTENBERG™
+concept and trademark. Project Gutenberg is a registered trademark,
+and may not be used if you charge for an eBook, except by following
+the terms of the trademark license, including paying royalties for use
+of the Project Gutenberg trademark. If you do not charge anything for
+copies of this eBook, complying with the trademark license is very
+easy. You may use this eBook for nearly any purpose such as creation
+of derivative works, reports, performances and research. Project
+Gutenberg eBooks may be modified and printed and given away—you may
+do practically ANYTHING in the United States with eBooks not protected
+by U.S. copyright law. Redistribution is subject to the trademark
+license, especially commercial redistribution.
+</div>
+
+<div id="project-gutenberg-license">START: FULL LICENSE</div>
+
+<h2 id="pg-footer-heading">THE FULL PROJECT GUTENBERG LICENSE</h2>
+
+<div class="agate">PLEASE READ THIS BEFORE YOU DISTRIBUTE OR USE THIS WORK
+</div><div>
+To protect the Project Gutenberg™ mission of promoting the free
+distribution of electronic works, by using or distributing this work
+(or any other work associated in any way with the phrase “Project
+Gutenberg”), you agree to comply with all the terms of the Full
+Project Gutenberg™ License available with this file or online at
+www.gutenberg.org/license.
+</div><div class="secthead">
+Section 1. General Terms of Use and Redistributing Project Gutenberg™
+electronic works
+</div><div>
+1.A. By reading or using any part of this Project Gutenberg™
+electronic work, you indicate that you have read, understand, agree to
+and accept all the terms of this license and intellectual property
+(trademark/copyright) agreement. If you do not agree to abide by all
+the terms of this agreement, you must cease using and return or
+destroy all copies of Project Gutenberg™ electronic works in your
+possession. If you paid a fee for obtaining a copy of or access to a
+Project Gutenberg™ electronic work and you do not agree to be bound
+by the terms of this agreement, you may obtain a refund from the person
+or entity to whom you paid the fee as set forth in paragraph 1.E.8.
+</div><div>
+1.B. “Project Gutenberg” is a registered trademark. It may only be
+used on or associated in any way with an electronic work by people who
+agree to be bound by the terms of this agreement. There are a few
+things that you can do with most Project Gutenberg™ electronic works
+even without complying with the full terms of this agreement. See
+paragraph 1.C below. There are a lot of things you can do with Project
+Gutenberg™ electronic works if you follow the terms of this
+agreement and help preserve free future access to Project Gutenberg™
+electronic works. See paragraph 1.E below.
+</div><div>
+1.C. The Project Gutenberg Literary Archive Foundation (“the
+Foundation” or PGLAF), owns a compilation copyright in the collection
+of Project Gutenberg™ electronic works. Nearly all the individual
+works in the collection are in the public domain in the United
+States. If an individual work is unprotected by copyright law in the
+United States and you are located in the United States, we do not
+claim a right to prevent you from copying, distributing, performing,
+displaying or creating derivative works based on the work as long as
+all references to Project Gutenberg are removed. Of course, we hope
+that you will support the Project Gutenberg™ mission of promoting
+free access to electronic works by freely sharing Project Gutenberg™
+works in compliance with the terms of this agreement for keeping the
+Project Gutenberg™ name associated with the work. You can easily
+comply with the terms of this agreement by keeping this work in the
+same format with its attached full Project Gutenberg™ License when
+you share it without charge with others.
+</div><div>
+1.D. The copyright laws of the place where you are located also govern
+what you can do with this work. Copyright laws in most countries are
+in a constant state of change. If you are outside the United States,
+check the laws of your country in addition to the terms of this
+agreement before downloading, copying, displaying, performing,
+distributing or creating derivative works based on this work or any
+other Project Gutenberg™ work. The Foundation makes no
+representations concerning the copyright status of any work in any
+country other than the United States.
+</div><div>
+1.E. Unless you have removed all references to Project Gutenberg:
+</div><div>
+1.E.1. The following sentence, with active links to, or other
+immediate access to, the full Project Gutenberg™ License must appear
+prominently whenever any copy of a Project Gutenberg™ work (any work
+on which the phrase “Project Gutenberg” appears, or with which the
+phrase “Project Gutenberg” is associated) is accessed, displayed,
+performed, viewed, copied or distributed:
+</div><blockquote><div>
+    This eBook is for the use of anyone anywhere in the United States and most
+    other parts of the world at no cost and with almost no restrictions
+    whatsoever. You may copy it, give it away or re-use it under the terms
+    of the Project Gutenberg License included with this eBook or online
+    at <a href="https://www.gutenberg.org">www.gutenberg.org</a>. If you
+    are not located in the United States, you will have to check the laws
+    of the country where you are located before using this eBook.
+  </div></blockquote><div>
+1.E.2. If an individual Project Gutenberg™ electronic work is
+derived from texts not protected by U.S. copyright law (does not
+contain a notice indicating that it is posted with permission of the
+copyright holder), the work can be copied and distributed to anyone in
+the United States without paying any fees or charges. If you are
+redistributing or providing access to a work with the phrase “Project
+Gutenberg” associated with or appearing on the work, you must comply
+either with the requirements of paragraphs 1.E.1 through 1.E.7 or
+obtain permission for the use of the work and the Project Gutenberg™
+trademark as set forth in paragraphs 1.E.8 or 1.E.9.
+</div><div>
+1.E.3. If an individual Project Gutenberg™ electronic work is posted
+with the permission of the copyright holder, your use and distribution
+must comply with both paragraphs 1.E.1 through 1.E.7 and any
+additional terms imposed by the copyright holder. Additional terms
+will be linked to the Project Gutenberg™ License for all works
+posted with the permission of the copyright holder found at the
+beginning of this work.
+</div><div>
+1.E.4. Do not unlink or detach or remove the full Project Gutenberg™
+License terms from this work, or any files containing a part of this
+work or any other work associated with Project Gutenberg™.
+</div><div>
+1.E.5. Do not copy, display, perform, distribute or redistribute this
+electronic work, or any part of this electronic work, without
+prominently displaying the sentence set forth in paragraph 1.E.1 with
+active links or immediate access to the full terms of the Project
+Gutenberg™ License.
+</div><div>
+1.E.6. You may convert to and distribute this work in any binary,
+compressed, marked up, nonproprietary or proprietary form, including
+any word processing or hypertext form. However, if you provide access
+to or distribute copies of a Project Gutenberg™ work in a format
+other than “Plain Vanilla ASCII” or other format used in the official
+version posted on the official Project Gutenberg™ website
+(www.gutenberg.org), you must, at no additional cost, fee or expense
+to the user, provide a copy, a means of exporting a copy, or a means
+of obtaining a copy upon request, of the work in its original “Plain
+Vanilla ASCII” or other form. Any alternate format must include the
+full Project Gutenberg™ License as specified in paragraph 1.E.1.
+</div><div>
+1.E.7. Do not charge a fee for access to, viewing, displaying,
+performing, copying or distributing any Project Gutenberg™ works
+unless you comply with paragraph 1.E.8 or 1.E.9.
+</div><div>
+1.E.8. You may charge a reasonable fee for copies of or providing
+access to or distributing Project Gutenberg™ electronic works
+provided that:
+</div><ul>
+    <li>• You pay a royalty fee of 20% of the gross profits you derive from
+        the use of Project Gutenberg™ works calculated using the method
+        you already use to calculate your applicable taxes. The fee is owed
+        to the owner of the Project Gutenberg™ trademark, but he has
+        agreed to donate royalties under this paragraph to the Project
+        Gutenberg Literary Archive Foundation. Royalty payments must be paid
+        within 60 days following each date on which you prepare (or are
+        legally required to prepare) your periodic tax returns. Royalty
+        payments should be clearly marked as such and sent to the Project
+        Gutenberg Literary Archive Foundation at the address specified in
+        Section 4, “Information about donations to the Project Gutenberg
+        Literary Archive Foundation.”
+    </li>
+    <li>• You provide a full refund of any money paid by a user who notifies
+        you in writing (or by e-mail) within 30 days of receipt that s/he
+        does not agree to the terms of the full Project Gutenberg™
+        License. You must require such a user to return or destroy all
+        copies of the works possessed in a physical medium and discontinue
+        all use of and all access to other copies of Project Gutenberg™
+        works.
+    </li>
+    <li>• You provide, in accordance with paragraph 1.F.3, a full refund of
+        any money paid for a work or a replacement copy, if a defect in the
+        electronic work is discovered and reported to you within 90 days of
+        receipt of the work.
+    </li>
+    <li>• You comply with all other terms of this agreement for free
+        distribution of Project Gutenberg™ works.
+    </li>
+</ul><div>
+1.E.9. If you wish to charge a fee or distribute a Project
+Gutenberg™ electronic work or group of works on different terms than
+are set forth in this agreement, you must obtain permission in writing
+from the Project Gutenberg Literary Archive Foundation, the manager of
+the Project Gutenberg™ trademark. Contact the Foundation as set
+forth in Section 3 below.
+</div><div>
+1.F.
+</div><div>
+1.F.1. Project Gutenberg volunteers and employees expend considerable
+effort to identify, do copyright research on, transcribe and proofread
+works not protected by U.S. copyright law in creating the Project
+Gutenberg™ collection. Despite these efforts, Project Gutenberg™
+electronic works, and the medium on which they may be stored, may
+contain “Defects,” such as, but not limited to, incomplete, inaccurate
+or corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged disk or
+other medium, a computer virus, or computer codes that damage or
+cannot be read by your equipment.
+</div><div>
+1.F.2. LIMITED WARRANTY, DISCLAIMER OF DAMAGES - Except for the “Right
+of Replacement or Refund” described in paragraph 1.F.3, the Project
+Gutenberg Literary Archive Foundation, the owner of the Project
+Gutenberg™ trademark, and any other party distributing a Project
+Gutenberg™ electronic work under this agreement, disclaim all
+liability to you for damages, costs and expenses, including legal
+fees. YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+PROVIDED IN PARAGRAPH 1.F.3. YOU AGREE THAT THE FOUNDATION, THE
+TRADEMARK OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE
+LIABLE TO YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR
+INCIDENTAL DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH
+DAMAGE.
+</div><div>
+1.F.3. LIMITED RIGHT OF REPLACEMENT OR REFUND - If you discover a
+defect in this electronic work within 90 days of receiving it, you can
+receive a refund of the money (if any) you paid for it by sending a
+written explanation to the person you received the work from. If you
+received the work on a physical medium, you must return the medium
+with your written explanation. The person or entity that provided you
+with the defective work may elect to provide a replacement copy in
+lieu of a refund. If you received the work electronically, the person
+or entity providing it to you may choose to give you a second
+opportunity to receive the work electronically in lieu of a refund. If
+the second copy is also defective, you may demand a refund in writing
+without further opportunities to fix the problem.
+</div><div>
+1.F.4. Except for the limited right of replacement or refund set forth
+in paragraph 1.F.3, this work is provided to you ‘AS-IS’, WITH NO
+OTHER WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PURPOSE.
+</div><div>
+1.F.5. Some states do not allow disclaimers of certain implied
+warranties or the exclusion or limitation of certain types of
+damages. If any disclaimer or limitation set forth in this agreement
+violates the law of the state applicable to this agreement, the
+agreement shall be interpreted to make the maximum disclaimer or
+limitation permitted by the applicable state law. The invalidity or
+unenforceability of any provision of this agreement shall not void the
+remaining provisions.
+</div><div>
+1.F.6. INDEMNITY - You agree to indemnify and hold the Foundation, the
+trademark owner, any agent or employee of the Foundation, anyone
+providing copies of Project Gutenberg™ electronic works in
+accordance with this agreement, and any volunteers associated with the
+production, promotion and distribution of Project Gutenberg™
+electronic works, harmless from all liability, costs and expenses,
+including legal fees, that arise directly or indirectly from any of
+the following which you do or cause to occur: (a) distribution of this
+or any Project Gutenberg™ work, (b) alteration, modification, or
+additions or deletions to any Project Gutenberg™ work, and (c) any
+Defect you cause.
+</div><div class="secthead">
+Section 2. Information about the Mission of Project Gutenberg™
+</div><div>
+Project Gutenberg™ is synonymous with the free distribution of
+electronic works in formats readable by the widest variety of
+computers including obsolete, old, middle-aged and new computers. It
+exists because of the efforts of hundreds of volunteers and donations
+from people in all walks of life.
+</div><div>
+Volunteers and financial support to provide volunteers with the
+assistance they need are critical to reaching Project Gutenberg™’s
+goals and ensuring that the Project Gutenberg™ collection will
+remain freely available for generations to come. In 2001, the Project
+Gutenberg Literary Archive Foundation was created to provide a secure
+and permanent future for Project Gutenberg™ and future
+generations. To learn more about the Project Gutenberg Literary
+Archive Foundation and how your efforts and donations can help, see
+Sections 3 and 4 and the Foundation information page at www.gutenberg.org.
+</div><div class="secthead">
+Section 3. Information about the Project Gutenberg Literary Archive Foundation
+</div><div>
+The Project Gutenberg Literary Archive Foundation is a non-profit
+501(c)(3) educational corporation organized under the laws of the
+state of Mississippi and granted tax exempt status by the Internal
+Revenue Service. The Foundation’s EIN or federal tax identification
+number is 64-6221541. Contributions to the Project Gutenberg Literary
+Archive Foundation are tax deductible to the full extent permitted by
+U.S. federal laws and your state’s laws.
+</div><div>
+The Foundation’s business office is located at 809 North 1500 West,
+Salt Lake City, UT 84116, (801) 596-1887. Email contact links and up
+to date contact information can be found at the Foundation’s website
+and official page at www.gutenberg.org/contact
+</div><div class="secthead">
+Section 4. Information about Donations to the Project Gutenberg
+Literary Archive Foundation
+</div><div>
+Project Gutenberg™ depends upon and cannot survive without widespread
+public support and donations to carry out its mission of
+increasing the number of public domain and licensed works that can be
+freely distributed in machine-readable form accessible by the widest
+array of equipment including outdated equipment. Many small donations
+($1 to $5,000) are particularly important to maintaining tax exempt
+status with the IRS.
+</div><div>
+The Foundation is committed to complying with the laws regulating
+charities and charitable donations in all 50 states of the United
+States. Compliance requirements are not uniform and it takes a
+considerable effort, much paperwork and many fees to meet and keep up
+with these requirements. We do not solicit donations in locations
+where we have not received written confirmation of compliance. To SEND
+DONATIONS or determine the status of compliance for any particular state
+visit <a href="https://www.gutenberg.org/donate/">www.gutenberg.org/donate</a>.
+</div><div>
+While we cannot and do not solicit contributions from states where we
+have not met the solicitation requirements, we know of no prohibition
+against accepting unsolicited donations from donors in such states who
+approach us with offers to donate.
+</div><div>
+International donations are gratefully accepted, but we cannot make
+any statements concerning tax treatment of donations received from
+outside the United States. U.S. laws alone swamp our small staff.
+</div><div>
+Please check the Project Gutenberg web pages for current donation
+methods and addresses. Donations are accepted in a number of other
+ways including checks, online payments and credit card donations. To
+donate, please visit: www.gutenberg.org/donate.
+</div><div class="secthead">
+Section 5. General Information About Project Gutenberg™ electronic works
+</div><div>
+Professor Michael S. Hart was the originator of the Project
+Gutenberg™ concept of a library of electronic works that could be
+freely shared with anyone. For forty years, he produced and
+distributed Project Gutenberg™ eBooks with only a loose network of
+volunteer support.
+</div><div>
+Project Gutenberg™ eBooks are often created from several printed
+editions, all of which are confirmed as not protected by copyright in
+the U.S. unless a copyright notice is included. Thus, we do not
+necessarily keep eBooks in compliance with any particular paper
+edition.
+</div><div>
+Most people start at our website which has the main PG search
+facility: <a href="https://www.gutenberg.org">www.gutenberg.org</a>.
+</div><div>
+This website includes information about Project Gutenberg™,
+including how to make donations to the Project Gutenberg Literary
+Archive Foundation, how to help produce our new eBooks, and how to
+subscribe to our email newsletter to hear about new eBooks.
+</div>
+
+
+ 
+            ` };
+
+        
+    </script>
+</body>
+</html> 

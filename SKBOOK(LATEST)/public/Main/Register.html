@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - SKBook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+    <div class="left-section">
+        <div class="logo">
+            <h2 style="color: #a446c1;">SKBook</h2>
+        </div>
+        <h1>Create an account</h1>
+        <p class="subtitle">Please enter your details to get started</p>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number</label>
+                <input type="text" id="PhoneNumber" name="PhoneNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="text" id="age" name="age" required>
+            </div>
+           
+            <button type="submit" class="register-btn">Create account</button>
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a href="login.html">Sign in</a></p>
+        </div>
+    </div>
+        <div class="right-section">
+            <div class="decoration"></div> 
+            <img src="../image/Profile/Login_Latest.jpg">     
+        </div>
+    
+
+
+        
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+
+        // Base User class
+        class User {
+            constructor(username, email) {
+                this.username = username;
+                this.email = email;
+            }
+
+            displayInfo() {
+                return `Username: ${this.username}, Email: ${this.email}`;
+            }
+
+            validateEmail() {
+                return /^\S+@\S+\.\S+$/.test(this.email);
+            }
+        }
+
+        // RegisteredUser class extending User
+        class RegisteredUser extends User {
+            constructor(username, email, password, phoneNumber, age) {
+                super(username, email);
+                this.password = password;
+                this.phoneNumber = phoneNumber;
+                this.age = age;
+                this.createdAt = new Date().toISOString();
+            }
+
+            // Polymorphism: Override displayInfo method
+            displayInfo() {
+                return `${super.displayInfo()}, Phone: ${this.phoneNumber}, Age: ${this.age}`;
+            }
+
+            // Additional methods specific to registered users
+            validatePassword() {
+                return this.password.length >= 6;
+            }
+
+            validatePhoneNumber() {
+                return /^\d{10,}$/.test(this.phoneNumber);
+            }
+
+            validateAge() {
+                return !isNaN(this.age) && this.age > 0;
+            }
+
+            async saveToDatabase(db) {
+                try {
+                    await set(ref(db, 'users/' + this.username), {
+                        username: this.username,
+                        email: this.email,
+                        password: this.password,
+                        PhoneNumber: this.phoneNumber,
+                        age: this.age,
+                        createdAt: this.createdAt
+                    });
+                    return true;
+                } catch (error) {
+                    throw new Error('Database save failed: ' + error.message);
+                }
+            }
+
+            saveToLocalStorage() {
+                try {
+                    localStorage.setItem('userToken', 'logged-in');
+                    localStorage.setItem('userData', JSON.stringify({
+                        username: this.username,
+                        email: this.email,
+                        PhoneNumber: this.phoneNumber,
+                        age: this.age
+                    }));
+                    return true;
+                } catch (error) {
+                    throw new Error('LocalStorage save failed: ' + error.message);
+                }
+            }
+        }
+
+        // GuestUser class extending User
+        class GuestUser extends User {
+            constructor() {
+                super('Guest', 'No email provided');
+            }
+
+            // Polymorphism: Override displayInfo method
+            displayInfo() {
+                return 'Guest User - Limited Access';
+            }
+        }
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH8xyiOZufWJUwpWPjQwHLq7Iu1odAc7I",
+            authDomain: "skbook-d714f.firebaseapp.com",
+            databaseURL: "https://skbook-d714f-default-rtdb.firebaseio.com",
+            projectId: "skbook-d714f",
+            storageBucket: "skbook-d714f.firebasestorage.app",
+            messagingSenderId: "802609997862",
+            appId: "1:802609997862:web:3af2a67222d60873a5dee7",
+            measurementId: "G-H4QRWYC38E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Handle form submission
+        document.getElementById('registerForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phoneNumber = document.getElementById('PhoneNumber').value;
+            const age = document.getElementById('age').value;
+
+            try {
+                // Create new RegisteredUser instance
+                const newUser = new RegisteredUser(username, email, password, phoneNumber, age);
+
+                // Validate user data
+                if (!newUser.validateEmail()) {
+                    throw new Error('Invalid email format');
+                }
+                if (!newUser.validatePassword()) {
+                    throw new Error('Password must be at least 6 characters');
+                }
+                if (!newUser.validatePhoneNumber()) {
+                    throw new Error('Invalid phone number');
+                }
+                if (!newUser.validateAge()) {
+                    throw new Error('Invalid age');
+                }
+
+                // Save user data
+                await newUser.saveToDatabase(db);
+                newUser.saveToLocalStorage();
+                
+                alert("Registration Successful!");
+                window.location.href = 'Profile.html';
+            } catch (error) {
+                console.error("Error:", error);
+                alert(error.message || "Registration failed. Please try again.");
+            }
+        };
+
+        // Handle page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const userToken = localStorage.getItem('userToken');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+            let currentUser;
+            
+            if (userToken === 'logged-in' && userData.username) {
+                // Create RegisteredUser instance
+                currentUser = new RegisteredUser(
+                    userData.username,
+                    userData.email,
+                    '', // Password not stored in localStorage
+                    userData.PhoneNumber,
+                    userData.age
+                );
+            } else {
+                // Create GuestUser instance
+                currentUser = new GuestUser();
+            }
+
+            // Update profile information using polymorphic displayInfo method
+            document.getElementById('profile-name').textContent = currentUser.username;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-join-date').textContent = 
+                currentUser instanceof RegisteredUser ? 
+                `Member since ${userData.createdAt}` : 
+                'Not a member yet';
+        });
+
+        // Function to handle logout
+        function logout() {
+            try {
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Error during logout. Please try again.');
+            }
+        }
+
+        // Function to save user information
+        function saveUserInfo() {
+            const nameInput = document.getElementById('user-name');
+            const emailInput = document.getElementById('user-email');
+            const passwordInput = document.getElementById('user-password');
+            
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Validation
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+                alert('Please enter a valid email');
+                return;
+            }
+            
+            if (password && password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userEmail', email);
+            
+            if (password) {
+                localStorage.setItem('userPassword', 'password-updated');
+            }
+            
+            // Update displayed info
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-email').textContent = email;
+            
+            alert('Profile updated successfully!');
+        }
+
+        function showUserInfoModal() {
+            const modal = document.getElementById('userInfoModal');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Update modal content
+            document.getElementById('popup-username').textContent = userData.username || 'Guest';
+            document.getElementById('popup-email').textContent = userData.email || 'No email provided';
+            document.getElementById('popup-joindate').textContent = localStorage.getItem('userJoinDate') || 'Not available';
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('userInfoModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking the X
+        document.querySelector('.close-modal').addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('userInfoModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        });
+
+    </script>
+</body>
+</html>

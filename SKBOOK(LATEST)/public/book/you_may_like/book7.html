@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Header styles (same as Categories.html) */
+        .header {
+            background: #ffffff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* ... (copy other header styles from Categories.html) ... */
+
+        /* Book Details Styles */
+        .book-details-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+        }
+
+        .book-image-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .book-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .book-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .book-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .book-price {
+            font-size: 24px;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .book-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .chapters-section {
+            margin-top: 30px;
+        }
+
+        .chapters-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .chapters-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .chapter-number {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .chapter-title {
+            color: #333;
+        }
+
+        .purchase-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .buy-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .book-details-container {
+                grid-template-columns: 1fr;
+            }
+
+            .book-image-section {
+                position: static;
+            }
+
+            .book-image {
+                height: 400px;
+            }
+        }
+
+        /* Chapter Modal Styles */
+        .chapter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+        }
+
+        .chapter-modal-content {
+            position: relative;
+            background-color: white;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #007bff;
+        }
+
+        .chapter-content {
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .chapter-modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chapter-modal-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chapter-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #e9ecef;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Back Button Styles */
+        .back-button-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button i {
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .back-button-container {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as Categories.html) -->
+    <header class="header">
+        <!-- ... Copy header content from Categories.html ... -->
+    </header>
+
+    <div class="book-details-container">
+        <div class="book-image-section">
+            <img src="../../image/you_may_like/book7.jpg" alt="Book Cover" class="book-image">
+        </div>
+
+        <div class="book-info-section">
+            <h1 class="book-title">The man with a grouch</h1>
+            <p class="book-author">By H. De Vere Stacpoole</p>
+
+            <div class="book-description">
+                <h2>Description</h2>
+                <p>
+                    Reuben had come across all varieties of it, from the stark naked and quietly drunk to the murderous and violent, from the incompetent and lazy to the competent and thriving.
+                    He spent a month at Levua making a holiday of the business and absorbing Flexner and the whole situation
+                </p>
+            </div>
+
+            <div class="chapters-section">
+                <h2 class="chapters-title">Chapters</h2>
+                <div class="chapters-list">
+                    <div class="chapter-item" onclick="openChapter(1)">
+                        <div class="chapter-number">Chapter</div>
+                        <div class="chapter-title">The story talk about.....</div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Reading Modal -->
+    <div id="chapterModal" class="chapter-modal">
+        <div class="chapter-modal-content">
+            <span class="close-modal" onclick="closeChapter()">&times;</span>
+            <div class="chapter-modal-header">
+                <h2 id="modalChapterTitle" class="chapter-modal-title">Chapter 1: The Beginning</h2>
+            </div>
+            <div id="chapterContent" class="chapter-content">
+                <!-- Chapter content will be loaded here -->
+            </div>
+            <div class="chapter-navigation">
+                <button id="prevChapter" class="nav-button" onclick="navigateChapter(-1)">
+                    <i class="fas fa-arrow-left"></i> Previous Chapter
+                </button>
+                <button id="nextChapter" class="nav-button" onclick="navigateChapter(1)">
+                    Next Chapter <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button-container">
+        <div class="back-button" onclick="goBackToCategories()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+    </div>
+
+    <script>
+        class Book {
+            constructor(title, author, imageUrl, price, description) {
+                this.title = title;
+                this.author = author;
+                this.imageUrl = imageUrl;
+                this.price = price;
+                this.description = description;
+            }
+
+            displayBasicInfo() {
+                document.querySelector('.book-title').textContent = this.title;
+                document.querySelector('.book-author').textContent = `By ${this.author}`;
+                document.querySelector('.book-image').src = this.imageUrl;
+                document.querySelector('.book-image').alt = this.title;
+                document.querySelector('.book-price').textContent = `$${this.price.toFixed(2)}`;
+                document.querySelector('.book-description p').textContent = this.description;
+            }
+        }
+
+        class DetailedBook extends Book {
+            constructor(title, author, imageUrl, price, description, chapters) {
+                super(title, author, imageUrl, price, description);
+                this.chapters = chapters;
+            }
+
+            displayChapters() {
+                const chaptersContainer = document.querySelector('.chapters-list');
+                chaptersContainer.innerHTML = ''; // Clear existing chapters
+
+                this.chapters.forEach(chapter => {
+                    const chapterElement = document.createElement('div');
+                    chapterElement.className = 'chapter-item';
+                    chapterElement.onclick = () => this.openChapter(chapter.number);
+                    chapterElement.innerHTML = `
+                        <div class="chapter-number">Chapter ${chapter.number}</div>
+                        <div class="chapter-title">${chapter.title}</div>
+                    `;
+                    chaptersContainer.appendChild(chapterElement);
+                });
+            }
+
+            openChapter(chapterNum) {
+                try {
+                    const chapterContent = this.chapters.find(ch => ch.number === chapterNum).content;
+                    document.getElementById('chapterContent').innerHTML = chapterContent;
+                    document.getElementById('chapterModal').style.display = 'block';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling of background
+                } catch (error) {
+                    console.error("Error opening chapter:", error);
+                }
+            }
+        }
+
+        function openChapter(chapterNum) {
+            currentChapter = chapterNum;
+            const modal = document.getElementById('chapterModal');
+            const modalTitle = document.getElementById('modalChapterTitle');
+            const chapterContent = document.getElementById('chapterContent');
+            const prevButton = document.getElementById('prevChapter');//if any chapter
+            const nextButton = document.getElementById('nextChapter');// if any 
+
+            modalTitle.textContent = `Chapter ${chapterNum}: ${getChapterTitle(chapterNum)}`;
+            chapterContent.innerHTML = chapterContents[chapterNum];
+
+            // Update navigation buttons
+            prevButton.disabled = chapterNum === 1;
+            nextButton.disabled = chapterNum === totalChapters;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling of background
+        }
+
+        function closeChapter() {
+            const modal = document.getElementById('chapterModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        function navigateChapter(direction) {
+            const newChapter = currentChapter + direction;
+            if (newChapter >= 1 && newChapter <= totalChapters) {
+                openChapter(newChapter);
+            }
+        }
+
+        function getChapterTitle(chapterNum) {
+            const titles = {
+                1: 'The Beginning',
+               
+            };
+            return titles[chapterNum];
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chapterModal');
+            if (event.target === modal) {
+                closeChapter();
+            }
+        }
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (document.getElementById('chapterModal').style.display === 'block') {
+                if (event.key === 'Escape') {
+                    closeChapter();
+                } else if (event.key === 'ArrowLeft') {
+                    navigateChapter(-1);
+                } else if (event.key === 'ArrowRight') {
+                    navigateChapter(1);
+                }
+            }
+        });
+
+       
+        function goBackToCategories() {
+            window.location.href = '../../Main/Categories.html';
+        }
+
+      
+        let currentChapter = 1;
+        const totalChapters = 1;
+
+        // Sample chapter content - In a real application, this would come from a database
+        const chapterContents = {
+            1: `
+
+                
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"><style>
+#pg-header div, #pg-footer div {
+    all: initial;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 2em;
+}
+#pg-footer div.agate {
+    font-size: 90%;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+#pg-footer li {
+    all: initial;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-indent: -0.6em;
+}
+#pg-footer div.secthead {
+    font-size: 110%;
+    font-weight: bold;
+}
+#pg-footer #project-gutenberg-license {
+    font-size: 110%;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+#pg-header-heading {
+    all: inherit;
+    text-align: center;
+    font-size: 120%;
+    font-weight:bold;
+}
+#pg-footer-heading {
+    all: inherit;
+    text-align: center;
+    font-size: 120%;
+    font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#pg-header #pg-machine-header p {
+    text-indent: -4em;
+    margin-left: 4em;
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: medium
+}
+#pg-header #pg-header-authlist {
+    all: initial;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#pg-header #pg-machine-header strong {
+    font-weight: normal;
+}
+#pg-header #pg-start-separator, #pg-footer #pg-end-separator {
+    margin-bottom: 3em;
+    margin-left: 0;
+    margin-right: auto;
+    margin-top: 2em;
+    text-align: center
+}
+
+    .xhtml_center {text-align: center; display: block;}
+    .xhtml_center table {
+        display: table;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        }</style><meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>The Man with a Grouch | Project Gutenberg</title>
+    <style>body {
+    text-align: justify;
+    font-size: 1.1em
+    }
+@media screen {
+    body {
+        margin-left: 8%;
+        margin-right: 8%
+        }
+    }
+.pagedjs_page_content > div {
+    margin-left: 8%;
+    margin-right: 8%
+    }
+p {
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    text-indent: 1em
+    }
+.ni {
+    text-indent: 0
+    }
+.tb {
+    border: none;
+    border-bottom: 1px solid black;
+    margin: 1em auto 1em 20%;
+    width: 60%
+    }
+h1 {
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: normal;
+    margin-bottom: 0.2em
+    }
+blockquote {
+    margin-bottom: 1.6em;
+    font-size: 0.9em;
+    font-style: italic
+    }
+blockquote p {
+    text-indent: 0
+    }
+.tac {
+    text-align: center
+    }
+.fs12 {
+    font-size: 1.2em
+    }
+.sb {
+    text-indent: 0;
+    margin-top: 2em
+    }
+.tn {
+    font-size: 0.9em;
+    border: 1px solid silver;
+    margin-top: 1.8em;
+    margin-left: 10%;
+    width: 80%;
+    background-color: #DDE
+    }
+.tn p {
+    text-indent: 0;
+    text-align: left;
+    padding: 0.25em 0.4em
+    }
+.illustration70 {
+    display: block;
+    text-align: center;
+    margin: 2em 0;
+    width: 70%
+    }
+.illustration70 img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block
+    }
+hr.tb {
+    border: none;
+    text-align: center;
+    height: auto;
+    margin: 1em auto;
+    display: flex;
+    justify-content: center
+    }
+hr.tb::after {
+    content: "*        *        *        *        *";
+    white-space: pre;
+    display: block;
+    text-align: center
+    }</style>
+<link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
+<link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+<meta name="dc.title" content="The man with a grouch">
+<meta name="dc.language" content="en">
+<meta name="dcterms.source" content="https://www.gutenberg.org/files/75565/75565-h/75565-h.htm">
+<meta name="dcterms.modified" content="2025-03-30T08:10:53.586805+00:00">
+<meta name="dc.rights" content="Public domain in the USA.">
+<link rel="dcterms.isFormatOf" href="http://www.gutenberg.org/ebooks/75565">
+<meta name="dc.creator" content="Stacpoole, H. De Vere (Henry De Vere), 1863-1951">
+<meta name="dc.subject" content="Short stories">
+<meta name="dc.subject" content="Islands of the Pacific -- Fiction">
+<meta name="dcterms.created" content="2025-03-08">
+<meta name="generator" content="Ebookmaker 0.13.6 by Project Gutenberg">
+<meta property="og:title" content="The man with a grouch">
+<meta property="og:type" content="Text">
+<meta property="og:url" content="https://www.gutenberg.org/cache/epub/75565/pg75565-images.html">
+<meta property="og:image" content="https://www.gutenberg.org/cache/epub/75565/pg75565.cover.medium.jpg">
+</head>
+<body><section class="pg-boilerplate pgheader" id="pg-header" lang="en"><h2 id="pg-header-heading" title="">The Project Gutenberg eBook of <span lang="en" id="pg-title-no-subtitle">The man with a grouch</span></h2>
+    
+<div>This ebook is for the use of anyone anywhere in the United States and
+most other parts of the world at no cost and with almost no restrictions
+whatsoever. You may copy it, give it away or re-use it under the terms
+of the Project Gutenberg License included with this ebook or online
+at <a class="reference external" href="https://www.gutenberg.org">www.gutenberg.org</a>. If you are not located in the United States,
+you will have to check the laws of the country where you are located
+before using this eBook.</div>
+
+<div class="container" id="pg-machine-header"><p><strong>Title</strong>: The man with a grouch</p>
+<div id="pg-header-authlist">
+<p><strong>Author</strong>: H. De Vere Stacpoole</p>
+</div>
+<p><strong>Release date</strong>: March 8, 2025 [eBook #75565]</p>
+
+<p><strong>Language</strong>: English</p>
+
+<p><strong>Original publication</strong>: New York: Street &amp; Smith Corporation, 1929</p>
+
+<p><strong>Credits</strong>: Roger Frank and Sue Clark</p>
+
+</div><div id="pg-start-separator">
+<span>*** START OF THE PROJECT GUTENBERG EBOOK THE MAN WITH A GROUCH ***</span>
+</div></section><div style="text-align:center"></div>
+
+<figure class="illustration70">
+  <img alt="Three men sitting at a table" src="images/image1.jpg" id="img_images_image1.jpg">
+</figure>
+
+<h1>THE MAN WITH A GROUCH</h1>
+
+<p class="tac fs12">by H. De Vere Stacpoole</p>
+
+<figure class="illustration70">
+  <img alt="A sailing ship in a harbor" src="images/image2.jpg" id="img_images_image2.jpg">
+</figure>
+
+<blockquote><div>
+    <p>A Story of the South Seas, and of a Man Who Wanted to Spend Christmas in
+    England</p>
+</div></blockquote>
+
+<p>At Levua, even today there are to be found square miles of old forest.
+The true high woods of the tropics; trees fetched from Heaven knows
+where to shoulder one another and shudder in the sea wind and thrust at
+each other in the great storms when the coconuts of the beach palms are
+flying like cannon balls.</p>
+
+<p>Here in this island there are redwoods, though smaller than the
+California giants, and mahoganies such as you see in the woods of
+Martinique; in the old days sandalwood was the chief export, but today
+it is all copra with a hint of pineapples, if they succeed with the new
+grounds that they are trying out beyond Mayano.</p>
+
+<p>Just at the time of this story, Flexner was running the trade station at
+Levua and making a mess of the business. Lombard, Drex &amp; Co., of San
+Francisco, owned the station. It wasn’t their fault that things were not
+going well; it wasn’t the fault of the market, for prices were ruling
+high; it wasn’t the fault of the trees that were bearing well; and it
+seemingly wasn’t the fault of Flexner, for he didn’t drink to excess and
+he was by all accounts and seeming a straight man and honest as day.</p>
+
+<p>Old Reuben Lombard, puzzling over this matter, came to Levua to
+investigate matters for himself. He was a wise old man with a profound,
+and one might say appalling, knowledge of human nature.</p>
+
+<p>Employees are mostly compounded of human nature. Especially on the
+Pacific coast and in the Islands.</p>
+
+<p>Reuben had come across all varieties of it, from the stark naked and
+quietly drunk to the murderous and violent, from the incompetent and
+lazy to the competent and thriving. He spent a month at Levua making a
+holiday of the business and absorbing Flexner and the whole situation;
+then he returned to San Francisco and told his partner Drex that he was
+going to fire Flexner.</p>
+
+<p>“He’s a bad character,” said Reuben. “I don’t mean drink, women, cards
+or anything of that sort; I’m talking of him as a business man. He’s
+never satisfied; that’s what it amounts to. I got his past history out
+of him in talk. He started in life with some money safely invested in
+high-class stuff, but wasn’t satisfied with five and a half per cent, so
+turned it into wildcat and went bust. At Levua he wasn’t satisfied with
+the old trader’s house, and built another in a better situation, with
+the result that the first hurricane took it and laid it all over the
+reefs. He wasn’t satisfied with the way Sru, the headman on the west
+side, was doing his work and ruling his people, so he kept butting in
+till Sru began to see red and went for Sipi of the east side. Flexner
+had pointed out Sipi as an example; Sru went for the example and laid it
+out with a club. Then there was hell’s shines between the two sides of
+the island till the missionaries stepped in and patched things up.</p>
+
+<p>“That’s only a bit; there were lots of other little things.</p>
+
+<p>“You know, the sort of man that messes about at home mending the window
+blinds, nagging the servants, and interfering with the wife’s
+arrangements. Never satisfied, that’s Flexner. It’s mostly an American
+disease, but Flexner has put English additions to it—he’s an
+Englishman. Sitting smoking on the veranda with him night before I left,
+I said to him, ‘Now, ain’t that perfect! Look at that lagoon full of
+stars and those lights on the reef where they’re spearing the fish.
+Smell of the air!’ ‘Yes,’ he says, ‘but have you ever seen the Thames
+above Richmond on a fine summer’s night?’</p>
+
+<p>“Well, I reckon he’ll see it soon.”</p>
+
+<p>“But look here,” said Drex. “Dissatisfaction with things as they are
+ought to be the soul of progress in art and commerce.”</p>
+
+<p>“Oh, gosh!” said Lombard. “I’m not talking of things as they are; I’m
+only getting at the mentality that’s always grousing because things
+aren’t what they aren’t—dissatisfaction as a matter of mind principle.
+If you gave this chap a ticket for Jerusalem with free drinks ’n’ hotel
+expenses he’d ten to one grumble that it wasn’t the New Jerusalem the
+booking was for. Anyhow, he’s fired. I’m writing him tonight and I’m
+going to send Arrow in his place.”</p>
+
+<hr class="tb">
+
+<p>One morning toward the end of December, Flexner came out on his veranda
+in pajamas. The old trader’s house which he was reoccupying stood on a
+bay of the groves facing the white sands of the beach and the blue water
+separating the beach from the reefs.</p>
+
+<p>The outer sea beyond the reefs stretched like a sheet of lazulite to
+where above the far horizon the white trade clouds showed like a
+procession of ghosts born of distance and summer. On the beach were some
+Kanaka canoemen who had just come in with a take of fish; also a naked
+nut-brown child full of the joy of life and beating with a lump of coral
+on a tin can. It was like a scene from “Floradora”, a picture that might
+have been born from the brain of Basil Dean in one of his southern or
+eastern moods. Only Flexner did not fit the surroundings, a
+ginger-colored man in striped blue-and-purple pajamas sitting now
+drinking his coffee, smoking a cigarette and reading a letter.</p>
+
+<p>The letter was a month old. It was from Lombard, Drex &amp; Co., telling him
+he was fired, had come by the mail brigantine, and informed him that his
+successor, Mr. George Arrow, was coming to Levua by the company’s
+schooner, the <i>Golden Hope</i>.</p>
+
+<p>Half an hour ago Kepi, Flexner’s personal servant and man of all work,
+had roused him with the news that a schooner had been sighted from the
+bluff. “That’s her,” said Flexner, tumbling out of bed. He tubbed and
+resumed his pajamas and, taking the letter from his bureau, came out to
+wait the arrival of the newcomer and drink his coffee. He was quite
+unperturbed.</p>
+
+<p>He was a good-natured man, even though, as Lombard said, he was never
+satisfied with things as they were. A man who took disaster as the
+natural expression of a world that was mainly all wrong.</p>
+
+<p>When his house had been blown away he just said, “Well, that’s that,”
+and came back to live in the old trader’s house; and now, waiting for
+his successor, he felt no animosity or irritation.</p>
+
+<p>It was one of the things that ought to have been different, that was
+all.</p>
+
+<p>His position was serious from a worldly point of view. He had saved
+scarcely any money, not more than seventy pounds all told, and what on
+earth he was to do for a job when he got back to San Francisco he didn’t
+know. Another thing that ought to have been different, that was all.</p>
+
+<p>He was finishing his coffee when the fore canvas of a schooner showed
+beyond the reef; when the rest of her, hidden by the bluff, came into
+view, she revealed herself as the <i>Golden Hope</i>.</p>
+
+<p>There are ships that seem to have been built for beauty as well as use
+and the <i>Golden Hope</i> was one of them; one of the old-time fleet that
+included the <i>Mary Rose</i> and <i>Dancing Wave</i>, creatures rather than
+things, born, like the gulls, to live in harmony with the sea and in
+fellowship with the wind.</p>
+
+<p>She formed a pretty picture as she came in with a snow of gulls astern
+of her, rounding with all her canvas ashiver and dropping anchor in ten
+fathoms of water, a couple of cable lengths from the beach.</p>
+
+<p>Flexner, pajamas and all, came down to the water’s edge to greet the
+boat that was pulling ashore.</p>
+
+<p>Captain Bartells was steering, and Arrow, the new trader, was seated
+beside him, a young and pleasant-looking man for whom Flexner at once
+felt a liking.</p>
+
+<p>They all tramped up to the house, and after soft drinks and cigarettes
+on the veranda, Bartells, putting back to the schooner to superintend
+the unloading of trade, left Flexner and his successor to get
+acquainted.</p>
+
+<p>They went over the house, the godown where trade goods were stored, and
+the copra sheds. Then they had dinner, and that evening on the veranda
+they talked very freely of the whole position, copra trade and what not.</p>
+
+<p>Old Lombard had told Arrow his opinion of Flexner, and Arrow was on the
+lookout for Flexner’s weak spot, but in all their conversation not one
+grumble was uttered by the latter. Flexner was supposed to be a man
+always dissatisfied, yet he showed no sign of dissatisfaction with
+anything. He talked quite openly of his own rather desperate financial
+condition, but he didn’t grumble. Was Lombard wrong?</p>
+
+<p>“It’s funny to think that day after tomorrow is Christmas Day,” said
+Arrow. “At least to me, for I was born north of N’ York and Christmas
+has always meant six inches of snow ’n’ holly berries and so on. I
+reckon I’m an out-and-out Christmaser of the good old type, and I’m not
+ashamed of it.”</p>
+
+<p>“Same here,” said Flexner. “I was born and brought up at Maltby in Kent
+—my father lives there still—and Christmas always brings me back to
+old times. We didn’t have much snow—haven’t had much in England of
+late years—but there was holly and ivy and good will all round, not to
+speak of presents and the old folks in the village coming up for packets
+of tea and so on. I reckon England is a good place and it never looks
+better than when you see it from twenty thousand miles away. And
+Christmas is the best thing in England. Last time I was there was five
+years ago and the old governor gave a children’s party. He’s
+seventy-five but seems to grow younger every year. Hasn’t lost a tooth
+in his head. And I bet this year he’ll be giving another party—and
+twenty years hence it will be the same. We’re a long-lived family, and
+he reckons to live to be a hundred.”</p>
+
+<p>“My poor old governor died six years ago,” said Arrow. “He wasn’t more
+than sixty-nine. We aren’t a long-lived family by a long chalk. I’m the
+only one left, and it’s a pretty lonesome world when it gets to that.”</p>
+
+<p>“Well, cheer up,” said Flexner, and produced a bottle of whisky.</p>
+
+<p>Yes, decidedly old Lombard must have been wrong.</p>
+
+<hr class="tb">
+
+<p>In the tropics, and especially among the Islands, Fortune plays strange
+tricks with men, and often in short time. Fifteen minutes and a
+sufficient hurricane will lay down a plantation of thirty thousand trees
+worth anything from fifteen hundred to three thousand a year, according
+to the price of copra—or, in the old days, a shift of the helm at sight
+of a distant atoll might have landed you in an uncharted pearl lagoon.</p>
+
+<p>While Flexner slept tonight the sleep of the just in his
+blue-and-purple-striped pajamas, Fate, landing at Levua and putting on
+the crown of Fortune, turned up her sleeves. She had fixed on Flexner as
+her man and she was going to do the thing royally and with gorgeous
+settings in two acts. And, getting toward three in the morning, with the
+stage lit up by a gorgeous moon, up went the curtain to a sound like the
+clamor of sea gulls on the beach.</p>
+
+<p>Flexner sprang from his bed and ran out on the veranda. Arrow came after
+him. The beach was alive with Kanakas running about and shouting and
+pointing to the inshore waters beyond the schooner, where, monstrous in
+the light of the moon, a great black bulk was dashing through the water,
+flinging huge arms to the air like a drowning giant or a——</p>
+
+<p><em>Crash!</em></p>
+
+<p>The foam shot fathoms high and the woods echoed to the concussion.</p>
+
+<p>“Cachalot!” cried Flexner. “Cachalot fighting a squid! Gosh! look at
+them!”</p>
+
+<p>The sight was phenomenal, for the cachalot was in a flurry.</p>
+
+<p>Now the cachalot is fond of grazing on the great squid. Sometimes he
+lugs one up to the surface and you see something that looks like a
+fight, the sixty-foot tentacles of the squid thrashing about with
+tremendous sound and fury; but the cachalot is not fighting, he is just
+eating, quietly chewing like a cow and quite regardless of the emotions
+of the chewed.</p>
+
+<p>But this thing was different. Something was wrong with the dinner.
+Either it had turned out poisonous in some way or the great beak of the
+squid had managed to get home somehow in an unpleasant manner.</p>
+
+<p>Driving through the water like a torpedo boat, the cachalot made a
+quarter of a mile toward the west, sank, rose, sprang, crashed in a
+smother of foam, and came racing back, close to the beach now, the great
+arms of the squid moving hilariously and the Kanakas cheering on the
+runner.</p>
+
+<p>“They’ll foul the schooner! They’ll foul the schooner!” cried Arrow.
+“Look! they’re making straight for it!”</p>
+
+<p>“No,” said Flexner, “there’s a sunk reef in the way. They’re too close
+inshore. It runs out for two hundred yards, and there’s no more than ten
+feet of water on it. They’ll beach—done it!”</p>
+
+<p>There was more than ten feet of water on the reef, for it was high tide.
+All the same, the reef did the business: for a moment the great bulk of
+the whale seemed to roll on it in a storm of foam, next it was free and
+making away for the reef opening and a life on the ocean wave.</p>
+
+<p>The gallery gods on the beach hooted, howled and whistled—prematurely,
+for the first act was not over.</p>
+
+<p>“Look!” said Arrow. “What’s that?”</p>
+
+<p>Something showed on the water this side of the reef, something like a
+half deflated balloon. It was the squid.</p>
+
+<p>The tentacles were no longer thrashing the air, they were submerged and
+otherwise engaged. But the form was not idly drifting, it was moving
+here and there with a steady trend toward the shore, so close now that
+two great luminous disks in it showed, disks paling and glowing like
+lamps now fully lit, now fading. They were the eyes.</p>
+
+<p>“What on earth is the matter with it?” asked Arrow, a chill at his
+heart.</p>
+
+<p>“Tiger sharks,” said Flexner. “They’re driving it ashore and eating it.”</p>
+
+<p>The Kanakas, drawn back a bit, were dead silent in full enjoyment of the
+spectacle. Just as you may see a bit of bread pushed about on the
+surface of the water by struggling fish, so the great form of the squid
+was driven here and there. It vanished to bob up again like a wet
+balloon; but now only one luminous disk showed, the other was gone. Then
+it slowly submerged to appear no more; but the water was troubled by the
+struggle still going on and the little waves breaking on the salt white
+sands left a stain dark as ink.</p>
+
+<p>Flexner and his companion turned back to the house.</p>
+
+<p>“Do you often have that sort of thing here?” said Arrow after he had
+asked for and received a tot of whisky.</p>
+
+<p>“I have never seen a cachalot in the lagoon waters before,” said
+Flexner. “The boys often catch big squids, but nothing to compare with
+that one. Interesting, wasn’t it?”</p>
+
+<p>Arrow went back to his couch for another couple of hours’ sleep—risking
+nightmare.</p>
+
+<p>The cheeriness of Flexner over this three o’clock in the morning
+interruption of an honest and decent man’s sleep crowned everything.</p>
+
+<p>“Interesting, wasn’t it?”</p>
+
+<p>Decidedly, old Lombard had mismeasured his man. Arrow did not know that
+Flexner’s main intellectual support at Levua had been nature study. Not
+a scientific naturalist, he was still one of those men—and there are
+many of them—to whom wild life makes an intense appeal; and, though the
+Thames above Richmond on a fine summer’s evening might hold more
+attraction for him than a star-shot lagoon, the land of colored coral
+and the perfumed wilderness of the woods had saved him time and again
+from the ennui that leads to drink.</p>
+
+<p>Fortune, who often uses men’s better qualities just as Fate often uses
+their worse, depended on this fact in staging the second act of that
+little play which might have been entitled, “How Good Luck Came to
+Christopher Flexner.”</p>
+
+<p>The curtain rose again on the veranda of the old trader’s house with
+Flexner and Arrow sitting at breakfast.</p>
+
+<p>The inshore waters, emerald deepening into blue, showed no trace of the
+tragedy of a few hours ago—of the squid that was being digested by half
+a dozen tiger sharks, or the cachalot safely escaped into the violet
+ocean beyond the purple reefs. The schooner, swinging bow to the shore,
+made a ripple marking the outgoing tide, and on her deck was the burly
+form of Captain Bartells, busy superintending the unloading of some
+boxes.</p>
+
+<p>“Cap said he’d be ready to start tomorrow,” said Flexner. “Looks like it
+—the trade stuff will be loaded today, and it won’t take more than a
+couple of hours to get the water on board.”</p>
+
+<p>“Christmas Day tomorrow,” said Arrow, “but that won’t hold him. Anyhow,
+I have time to write the couple of letters I want taken back to be
+posted at San Francisco—I forget whether you said you were going east
+from Frisco or sticking on the Pacific coast.”</p>
+
+<p>“I haven’t decided yet,” said Flexner; “it just depends how things turn
+out.”</p>
+
+<p>“Poor devil,” thought Arrow. He did not pursue the subject of Flexner’s
+immediate future and indeed he had business enough of his own to talk
+of, for in taking up or dropping a trade station there are a hundred
+little things to be discussed, so that it was getting on for ten and the
+sun of a perfect morning high above the bluff before they had finished.</p>
+
+<p>Leaving the new trader to go over the accounts and make himself familiar
+with the store book and papers, Flexner came down to the water’s edge,
+where the station boat was lying beside some beached canoes.</p>
+
+<p>She was a white-painted, carvel-built twelve-footer. He had often taken
+her out for fishing, and there was still in the bows a tub of line, also
+the grains he had used the other day when he had gone after a school of
+small rays that had come into the shore waters.</p>
+
+<p>Helped by one of the Kanakas he got her half afloat, stepped in, and
+pushed out alone.</p>
+
+<p>He wanted to look at Levua from the sea for the last time. He would see
+it from the schooner tomorrow when they were putting out, but that
+would not be the same. He would not be alone and able to think and
+reflect and measure up things and reminisce.</p>
+
+<p>He passed the schooner anchored over her own shadow on the coral floor.
+The hands had knocked off work for a spell and she lay like a thing
+deserted, the tide rippling at her anchor chain and the gulls flighting
+round her on the lookout for scraps. Beyond, and halfway to the reefs,
+he paused rowing and looked down at what perhaps he would never see
+again—down through the water clear as air at the colored parterres of
+coral and the sand patches where great shells crawled, the home of the
+Haliotis, the branch coral and sea fan.</p>
+
+<p>It was extraordinary to think that this submarine land of brilliancy and
+color existed in a world that at the same moment held London, fogbound
+perhaps, and Maltby with its leafless trees and sure-to-be-clouded
+skies; a submarine world that knew nothing of Father Christmas or the
+delights of the season that appealed to the exiled soul of Flexner.</p>
+
+<p>Flexner was thinking something like this—he was a man whose reflections
+were, if not cheap, sometimes secondhand. Having brooded for a while and
+drifted fifty yards or so, he took to his sculls again and, turning the
+boat’s nose, pushed out through the reefs to the open sea.</p>
+
+<p>It was from here that he could see the island properly, and as he had so
+often seen it when fishing for palu or sailing for pleasure. A wonderful
+sight, either by the light of the moon or the full light of day, as now.</p>
+
+<p>Broad-based, beyond the foaming reefs it lay, rising from the beach
+palms in a tempest of trees all blown by the wind to the heights where
+once the sandalwood grew, and showing clear from out here the cliff fall
+where a torrent tumbled, a white plume against the green. Ceiba,
+breadfruit palm, tree fern and lesser redwood all blowing and tossing to
+the trade wind; and there, a mushroom brown break in the foliage, the
+village of Sru, headman of the west side—the same who had laid out Sipi
+with a club in the good old island fashion.</p>
+
+<p>The tide was still on the ebb, and out here the southward-running
+current was strengthened by the tide. Flexner, drifting and dreaming and
+fighting his trade battles over again, had let the boat go as it wished
+and as a result the break in the reefs was no longer visible. He might
+have drifted farther had not his eye been caught by something away on
+the water to starboard.</p>
+
+<p>He thought at first that it was a dead fish floating just awash. Then he
+knew it wasn’t, for there were no gulls about. Besides, sharks don’t
+allow dead fish to float for long. He turned the boat and pulled toward
+the thing, urged not so much by simple curiosity as by the instinct of
+the naturalist, for something told him that this was not wreckage or
+driftwood from some island. Close to it now, it showed to be a great
+mass of some whitish substance, lumpy and mottled and veined with red.
+Gruesome, somehow, and repellent to the eye, but striking. No one could
+see that piece of flotsam without pausing to ask, “What on earth is it?”</p>
+
+<p>The boat’s nose came up against it with a gentle <em>dunch</em>, and Flexner,
+who had drawn in his sculls, leaned over and handled the stuff. It was
+as big as a big man and its shape was roughly that of a man wrapped in
+sacking. The end he had hold of was rounded like a head; there was a
+neck; then the mass swelled to the form of shoulders and tapered gently
+to the other extremity.</p>
+
+<p>Just as a potato or flint takes a human or other form, so had this thing
+obeyed the law which rules over the world of freaks.</p>
+
+<p>He tried its weight and found that, though he could raise the head a bit
+from the water, it would be impossible to get the thing on board. He
+desisted, and, kneeling on the grating in the bow, wiped the sweat from
+his forehead. His lips had gone dry as pumice stone, and his heart was
+now cleaving to his ribs like a bat to a wall, and now fluttering,
+batlike, before making another cleave.</p>
+
+<p>He thought for a moment he would die, for the smashing news had come to
+him from the void that he had struck ambergris.</p>
+
+<p>What settled the business was a thing like a tiger’s claw sticking on
+the mass. It was one of the hooks from the suckers of a great squid’s
+immense and powerful tentacles.</p>
+
+<p>He had never seen ambergris before, but he knew it by description; and
+now as his heart recovered itself and he could think before taking
+action, he saw clearly that this was no chance business but had to do
+with the drama of the night before.</p>
+
+<p>The cachalot, evidently wounded either by the squid or the reef, had got
+clear and made north, swimming against the Kiro Shiwo. Up north it had
+spat out the ambergris, which had floated down on the current. A
+mathematician might have told from the flow of the current and the speed
+of the cachalot in its flight exactly where the stuff had been voided,
+but this was a matter of indifference to Flexner.</p>
+
+<p>He had to salvage the stuff. How? He had heard enough from Pacific men’s
+talk to know that it was worth many thousands of pounds; the breaking
+away of any part of it would be a heavy loss. He had the grains and a
+bucket half full of line. The grains were useless ; it was impossible to
+tell the result of digging a fish spear into that mass of stuff—it
+might mean cleavage. Difficult enough to deal with as it was, it would
+be impossible to salvage it altogether if it were in two parts.</p>
+
+<p>He brought the line from the bow to the stern, fastened a bight round
+the “neck” of the thing and the line to the after-thwart, then he tested
+the pull, took the sculls, and started.</p>
+
+<p>He was south of the island a good way.</p>
+
+<p>The Kiro Shiwo had carried him along with it and the tremendous question
+arose as to how he would be able to make enough way against it with the
+heavy tow?</p>
+
+<p>Would the thing that had brought him fortune deny him fortune?</p>
+
+<p>Every now and then he turned his head to see how Levua lay and if he
+were making progress; between whiles the towrope held his eye. He could
+see whether it was taut or not, but a towrope is never uniformly taut—a
+movement of the water, a slight diminution of the speed of the towing
+craft will slacken it; there is no uniformity of pull.</p>
+
+<p>Sometimes he stopped rowing and, getting to the stern, hauled the tow
+closer to see how the rope held. After one of these examinations and
+with infinite difficulty he shifted the rope from the neck-shaped
+depression to below the bulge of the shoulders and did it so well that
+the pull of the rope was still fore and aft with the thing; had it been
+otherwise the mass would have been towed sidewise and would have made
+progress impossible.</p>
+
+<p>But all this took time, and as he stood up from the job and looked
+toward Levua his heart half sank. He had made very little way.
+Fortunately the wind had died with noon and slack tide was due, but one
+could never tell in these seas what was coming from moment to moment,
+and if a squall were to rise or even if the wind were to wake up and
+blow from the north—well, good-by to Fortune. He took up the sculls
+again.</p>
+
+<p>A burgomaster gull passed him with a cry that cut his nerves like a
+steel whip, and now from the sea to starboard <i>pop-pop-pop</i>, breaking
+from the water in one particular spot as if fired from a machine gun,
+came silver arrowheads, flying fish with black, staring, sightless eyes,
+flittering into the water to starboard and right athwart the course of
+the boat. If some great fish were following them close to the surface
+and were to foul the ambergris——</p>
+
+<p>He drove the thought away and pulled.</p>
+
+<p>Yes, he was making way; the change from slack had occurred and the tide
+was now running into the lagoon of Levua.</p>
+
+<p>An hour later he was inside the reefs. The fellows on board the <i>Golden
+Hope</i> were getting the last of the trade stuff and provisions over into
+the boat alongside, and Bartells, superintending the business, came to
+the rail as Flexner drew alongside.</p>
+
+<p>“Hello!” cried Bartells. “What are you towin’?”</p>
+
+<p>“Shy us a rope,” said Flexner.</p>
+
+<p>He brought the boat alongside just aft of the provision boat, which was
+loading from the fore hatch.</p>
+
+<p>Bartells, leaning on the rail, looked over down at the stuff that was
+now lifting to the swell of the incoming tide and duddering against the
+boat side.</p>
+
+<p>“Ambergris,” said Flexner.</p>
+
+<p>“Gosh Almighty!” said Bartells. He had been in the whaling business and
+could measure the full size of the business at a glance.</p>
+
+<p>Bartells was a friend of Flexner’s, liked him, and regretted his having
+been fired. Bartells had his own opinion of old Lombard, who, according
+to Bartells, would skin the devil and sell the hoofs for glue—if he
+could get the chance.</p>
+
+<p>“A moment,” said Bartells. “You ain’t in the company’s employ no longer.
+Was your discharge dating from when?”</p>
+
+<p>“From yesterday, when Mr. Arrow took over,” replied Flexner, vaguely
+wondering but somehow guessing what the other was driving at.</p>
+
+<p>“But it’s on the contract you are to get a free passage home if so be
+you want it?”</p>
+
+<p>“Yes.”</p>
+
+<p>“You found that stuff outside the three-mile limit,” went on the
+captain, “for I was watching you. Consequentially it’s yours.”</p>
+
+<p>“Yes.”</p>
+
+<p>“Well, we’re open to take cargo for private owners; that’s my
+instructions. You, being no longer in the company’s employ, come to me
+asking me to take your stuff to Frisco at ordinary freight rates—is
+that your meaning?”</p>
+
+<p>“Yes,” said Flexner.</p>
+
+<p>Here was a man thinking of his interests and safeguarding him from the
+rapacity of the company, so that there would be no bother at all about
+landing and disposing of his treasure. It is good to have a friend like
+that. He wanted to speak, but words failed him and indeed Bartells gave
+him no time.</p>
+
+<p>The captain, with a pull of his whiskers and another glance at the
+floating gray mass, turned to Jarvis, the mate.</p>
+
+<p>“Rig a tackle and get that stuff on board for Mr. Flexner,” he said.</p>
+
+<p>An hour later in the cabin, he said, “I’m a judge of weights, and that
+stuff weighs all two hundred pounds and a bit more, and amber-grease is
+worth twenty-five dollars an ounce in the market. That’s five pounds of
+your money. You can add it up; it’s a tidy fortune. Well, here’s luck
+and chin-chin.”</p>
+
+<hr class="tb">
+
+<p>That night on the veranda of the old trader’s house Flexner and Arrow
+sat smoking and talking. Flexner would sleep ashore that night, as the
+<i>Golden Hope</i> was not due to start till noon.</p>
+
+<p>In the few tremendous hours since morning Flexner had been changed from
+a man without prospects to a man of substance, and he had risen to the
+business and the enjoyment of it. The whisky in the bottle on the cane
+table was several inches lower. Not that either man had exceeded; they
+were quite sober—and because of this, perhaps, it was that a reaction
+came in Flexner’s mood.</p>
+
+<p>He fell suddenly silent and sad. He seemed contemplating something at a
+long distance from the old trader’s house, then he made a noise in his
+throat that meant recognition of a fact and disapproval of it.</p>
+
+<p>“What’s wrong with you now?” asked Arrow, pausing in the act of pouring
+himself out some more whisky.</p>
+
+<p>“Nothing,” said Flexner, “only I was thinking that all the ambergris in
+the world wouldn’t get me home for Christmas Day.”</p>
+
+<p>He spoke with an edge to his voice—an edge that indicated a distinct
+grouch.</p>
+
+<p>“My God!” said Arrow to himself, putting down the bottle. “Old Lombard
+was right.”</p>
+
+<p>He went into the house to fetch his tobacco pouch. A cane chair got in
+his way and he kicked it viciously.</p>
+
+<p>He felt like that.</p>
+
+<div class="tn">
+    <p>Transcriber’s Note: This story appeared in the <i>Second January Number, 1929</i>
+   issue of <i>The Popular Magazine</i>.</p>
+</div>
+
+<div style="text-align:center"></div><section class="pg-boilerplate pgheader" id="pg-footer" lang="en">
+<div id="pg-end-separator">
+<span>*** END OF THE PROJECT GUTENBERG EBOOK THE MAN WITH A GROUCH ***</span>
+</div>
+
+    
+<div>
+Updated editions will replace the previous one—the old editions will
+be renamed.
+</div><div>
+Creating the works from print editions not protected by U.S. copyright
+law means that no one owns a United States copyright in these works,
+so the Foundation (and you!) can copy and distribute it in the United
+States without permission and without paying copyright
+royalties. Special rules, set forth in the General Terms of Use part
+of this license, apply to copying and distributing Project
+Gutenberg™ electronic works to protect the PROJECT GUTENBERG™
+concept and trademark. Project Gutenberg is a registered trademark,
+and may not be used if you charge for an eBook, except by following
+the terms of the trademark license, including paying royalties for use
+of the Project Gutenberg trademark. If you do not charge anything for
+copies of this eBook, complying with the trademark license is very
+easy. You may use this eBook for nearly any purpose such as creation
+of derivative works, reports, performances and research. Project
+Gutenberg eBooks may be modified and printed and given away—you may
+do practically ANYTHING in the United States with eBooks not protected
+by U.S. copyright law. Redistribution is subject to the trademark
+license, especially commercial redistribution.
+</div>
+
+<div id="project-gutenberg-license">START: FULL LICENSE</div>
+
+<h2 id="pg-footer-heading">THE FULL PROJECT GUTENBERG LICENSE</h2>
+
+<div class="agate">PLEASE READ THIS BEFORE YOU DISTRIBUTE OR USE THIS WORK
+</div><div>
+To protect the Project Gutenberg™ mission of promoting the free
+distribution of electronic works, by using or distributing this work
+(or any other work associated in any way with the phrase “Project
+Gutenberg”), you agree to comply with all the terms of the Full
+Project Gutenberg™ License available with this file or online at
+www.gutenberg.org/license.
+</div><div class="secthead">
+Section 1. General Terms of Use and Redistributing Project Gutenberg™
+electronic works
+</div><div>
+1.A. By reading or using any part of this Project Gutenberg™
+electronic work, you indicate that you have read, understand, agree to
+and accept all the terms of this license and intellectual property
+(trademark/copyright) agreement. If you do not agree to abide by all
+the terms of this agreement, you must cease using and return or
+destroy all copies of Project Gutenberg™ electronic works in your
+possession. If you paid a fee for obtaining a copy of or access to a
+Project Gutenberg™ electronic work and you do not agree to be bound
+by the terms of this agreement, you may obtain a refund from the person
+or entity to whom you paid the fee as set forth in paragraph 1.E.8.
+</div><div>
+1.B. “Project Gutenberg” is a registered trademark. It may only be
+used on or associated in any way with an electronic work by people who
+agree to be bound by the terms of this agreement. There are a few
+things that you can do with most Project Gutenberg™ electronic works
+even without complying with the full terms of this agreement. See
+paragraph 1.C below. There are a lot of things you can do with Project
+Gutenberg™ electronic works if you follow the terms of this
+agreement and help preserve free future access to Project Gutenberg™
+electronic works. See paragraph 1.E below.
+</div><div>
+1.C. The Project Gutenberg Literary Archive Foundation (“the
+Foundation” or PGLAF), owns a compilation copyright in the collection
+of Project Gutenberg™ electronic works. Nearly all the individual
+works in the collection are in the public domain in the United
+States. If an individual work is unprotected by copyright law in the
+United States and you are located in the United States, we do not
+claim a right to prevent you from copying, distributing, performing,
+displaying or creating derivative works based on the work as long as
+all references to Project Gutenberg are removed. Of course, we hope
+that you will support the Project Gutenberg™ mission of promoting
+free access to electronic works by freely sharing Project Gutenberg™
+works in compliance with the terms of this agreement for keeping the
+Project Gutenberg™ name associated with the work. You can easily
+comply with the terms of this agreement by keeping this work in the
+same format with its attached full Project Gutenberg™ License when
+you share it without charge with others.
+</div><div>
+1.D. The copyright laws of the place where you are located also govern
+what you can do with this work. Copyright laws in most countries are
+in a constant state of change. If you are outside the United States,
+check the laws of your country in addition to the terms of this
+agreement before downloading, copying, displaying, performing,
+distributing or creating derivative works based on this work or any
+other Project Gutenberg™ work. The Foundation makes no
+representations concerning the copyright status of any work in any
+country other than the United States.
+</div><div>
+1.E. Unless you have removed all references to Project Gutenberg:
+</div><div>
+1.E.1. The following sentence, with active links to, or other
+immediate access to, the full Project Gutenberg™ License must appear
+prominently whenever any copy of a Project Gutenberg™ work (any work
+on which the phrase “Project Gutenberg” appears, or with which the
+phrase “Project Gutenberg” is associated) is accessed, displayed,
+performed, viewed, copied or distributed:
+</div><blockquote><div>
+    This eBook is for the use of anyone anywhere in the United States and most
+    other parts of the world at no cost and with almost no restrictions
+    whatsoever. You may copy it, give it away or re-use it under the terms
+    of the Project Gutenberg License included with this eBook or online
+    at <a href="https://www.gutenberg.org">www.gutenberg.org</a>. If you
+    are not located in the United States, you will have to check the laws
+    of the country where you are located before using this eBook.
+  </div></blockquote><div>
+1.E.2. If an individual Project Gutenberg™ electronic work is
+derived from texts not protected by U.S. copyright law (does not
+contain a notice indicating that it is posted with permission of the
+copyright holder), the work can be copied and distributed to anyone in
+the United States without paying any fees or charges. If you are
+redistributing or providing access to a work with the phrase “Project
+Gutenberg” associated with or appearing on the work, you must comply
+either with the requirements of paragraphs 1.E.1 through 1.E.7 or
+obtain permission for the use of the work and the Project Gutenberg™
+trademark as set forth in paragraphs 1.E.8 or 1.E.9.
+</div><div>
+1.E.3. If an individual Project Gutenberg™ electronic work is posted
+with the permission of the copyright holder, your use and distribution
+must comply with both paragraphs 1.E.1 through 1.E.7 and any
+additional terms imposed by the copyright holder. Additional terms
+will be linked to the Project Gutenberg™ License for all works
+posted with the permission of the copyright holder found at the
+beginning of this work.
+</div><div>
+1.E.4. Do not unlink or detach or remove the full Project Gutenberg™
+License terms from this work, or any files containing a part of this
+work or any other work associated with Project Gutenberg™.
+</div><div>
+1.E.5. Do not copy, display, perform, distribute or redistribute this
+electronic work, or any part of this electronic work, without
+prominently displaying the sentence set forth in paragraph 1.E.1 with
+active links or immediate access to the full terms of the Project
+Gutenberg™ License.
+</div><div>
+1.E.6. You may convert to and distribute this work in any binary,
+compressed, marked up, nonproprietary or proprietary form, including
+any word processing or hypertext form. However, if you provide access
+to or distribute copies of a Project Gutenberg™ work in a format
+other than “Plain Vanilla ASCII” or other format used in the official
+version posted on the official Project Gutenberg™ website
+(www.gutenberg.org), you must, at no additional cost, fee or expense
+to the user, provide a copy, a means of exporting a copy, or a means
+of obtaining a copy upon request, of the work in its original “Plain
+Vanilla ASCII” or other form. Any alternate format must include the
+full Project Gutenberg™ License as specified in paragraph 1.E.1.
+</div><div>
+1.E.7. Do not charge a fee for access to, viewing, displaying,
+performing, copying or distributing any Project Gutenberg™ works
+unless you comply with paragraph 1.E.8 or 1.E.9.
+</div><div>
+1.E.8. You may charge a reasonable fee for copies of or providing
+access to or distributing Project Gutenberg™ electronic works
+provided that:
+</div><ul>
+    <li>• You pay a royalty fee of 20% of the gross profits you derive from
+        the use of Project Gutenberg™ works calculated using the method
+        you already use to calculate your applicable taxes. The fee is owed
+        to the owner of the Project Gutenberg™ trademark, but he has
+        agreed to donate royalties under this paragraph to the Project
+        Gutenberg Literary Archive Foundation. Royalty payments must be paid
+        within 60 days following each date on which you prepare (or are
+        legally required to prepare) your periodic tax returns. Royalty
+        payments should be clearly marked as such and sent to the Project
+        Gutenberg Literary Archive Foundation at the address specified in
+        Section 4, “Information about donations to the Project Gutenberg
+        Literary Archive Foundation.”
+    </li>
+    <li>• You provide a full refund of any money paid by a user who notifies
+        you in writing (or by e-mail) within 30 days of receipt that s/he
+        does not agree to the terms of the full Project Gutenberg™
+        License. You must require such a user to return or destroy all
+        copies of the works possessed in a physical medium and discontinue
+        all use of and all access to other copies of Project Gutenberg™
+        works.
+    </li>
+    <li>• You provide, in accordance with paragraph 1.F.3, a full refund of
+        any money paid for a work or a replacement copy, if a defect in the
+        electronic work is discovered and reported to you within 90 days of
+        receipt of the work.
+    </li>
+    <li>• You comply with all other terms of this agreement for free
+        distribution of Project Gutenberg™ works.
+    </li>
+</ul><div>
+1.E.9. If you wish to charge a fee or distribute a Project
+Gutenberg™ electronic work or group of works on different terms than
+are set forth in this agreement, you must obtain permission in writing
+from the Project Gutenberg Literary Archive Foundation, the manager of
+the Project Gutenberg™ trademark. Contact the Foundation as set
+forth in Section 3 below.
+</div><div>
+1.F.
+</div><div>
+1.F.1. Project Gutenberg volunteers and employees expend considerable
+effort to identify, do copyright research on, transcribe and proofread
+works not protected by U.S. copyright law in creating the Project
+Gutenberg™ collection. Despite these efforts, Project Gutenberg™
+electronic works, and the medium on which they may be stored, may
+contain “Defects,” such as, but not limited to, incomplete, inaccurate
+or corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged disk or
+other medium, a computer virus, or computer codes that damage or
+cannot be read by your equipment.
+</div><div>
+1.F.2. LIMITED WARRANTY, DISCLAIMER OF DAMAGES - Except for the “Right
+of Replacement or Refund” described in paragraph 1.F.3, the Project
+Gutenberg Literary Archive Foundation, the owner of the Project
+Gutenberg™ trademark, and any other party distributing a Project
+Gutenberg™ electronic work under this agreement, disclaim all
+liability to you for damages, costs and expenses, including legal
+fees. YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+PROVIDED IN PARAGRAPH 1.F.3. YOU AGREE THAT THE FOUNDATION, THE
+TRADEMARK OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE
+LIABLE TO YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR
+INCIDENTAL DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH
+DAMAGE.
+</div><div>
+1.F.3. LIMITED RIGHT OF REPLACEMENT OR REFUND - If you discover a
+defect in this electronic work within 90 days of receiving it, you can
+receive a refund of the money (if any) you paid for it by sending a
+written explanation to the person you received the work from. If you
+received the work on a physical medium, you must return the medium
+with your written explanation. The person or entity that provided you
+with the defective work may elect to provide a replacement copy in
+lieu of a refund. If you received the work electronically, the person
+or entity providing it to you may choose to give you a second
+opportunity to receive the work electronically in lieu of a refund. If
+the second copy is also defective, you may demand a refund in writing
+without further opportunities to fix the problem.
+</div><div>
+1.F.4. Except for the limited right of replacement or refund set forth
+in paragraph 1.F.3, this work is provided to you ‘AS-IS’, WITH NO
+OTHER WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PURPOSE.
+</div><div>
+1.F.5. Some states do not allow disclaimers of certain implied
+warranties or the exclusion or limitation of certain types of
+damages. If any disclaimer or limitation set forth in this agreement
+violates the law of the state applicable to this agreement, the
+agreement shall be interpreted to make the maximum disclaimer or
+limitation permitted by the applicable state law. The invalidity or
+unenforceability of any provision of this agreement shall not void the
+remaining provisions.
+</div><div>
+1.F.6. INDEMNITY - You agree to indemnify and hold the Foundation, the
+trademark owner, any agent or employee of the Foundation, anyone
+providing copies of Project Gutenberg™ electronic works in
+accordance with this agreement, and any volunteers associated with the
+production, promotion and distribution of Project Gutenberg™
+electronic works, harmless from all liability, costs and expenses,
+including legal fees, that arise directly or indirectly from any of
+the following which you do or cause to occur: (a) distribution of this
+or any Project Gutenberg™ work, (b) alteration, modification, or
+additions or deletions to any Project Gutenberg™ work, and (c) any
+Defect you cause.
+</div><div class="secthead">
+Section 2. Information about the Mission of Project Gutenberg™
+</div><div>
+Project Gutenberg™ is synonymous with the free distribution of
+electronic works in formats readable by the widest variety of
+computers including obsolete, old, middle-aged and new computers. It
+exists because of the efforts of hundreds of volunteers and donations
+from people in all walks of life.
+</div><div>
+Volunteers and financial support to provide volunteers with the
+assistance they need are critical to reaching Project Gutenberg™’s
+goals and ensuring that the Project Gutenberg™ collection will
+remain freely available for generations to come. In 2001, the Project
+Gutenberg Literary Archive Foundation was created to provide a secure
+and permanent future for Project Gutenberg™ and future
+generations. To learn more about the Project Gutenberg Literary
+Archive Foundation and how your efforts and donations can help, see
+Sections 3 and 4 and the Foundation information page at www.gutenberg.org.
+</div><div class="secthead">
+Section 3. Information about the Project Gutenberg Literary Archive Foundation
+</div><div>
+The Project Gutenberg Literary Archive Foundation is a non-profit
+501(c)(3) educational corporation organized under the laws of the
+state of Mississippi and granted tax exempt status by the Internal
+Revenue Service. The Foundation’s EIN or federal tax identification
+number is 64-6221541. Contributions to the Project Gutenberg Literary
+Archive Foundation are tax deductible to the full extent permitted by
+U.S. federal laws and your state’s laws.
+</div><div>
+The Foundation’s business office is located at 809 North 1500 West,
+Salt Lake City, UT 84116, (801) 596-1887. Email contact links and up
+to date contact information can be found at the Foundation’s website
+and official page at www.gutenberg.org/contact
+</div><div class="secthead">
+Section 4. Information about Donations to the Project Gutenberg
+Literary Archive Foundation
+</div><div>
+Project Gutenberg™ depends upon and cannot survive without widespread
+public support and donations to carry out its mission of
+increasing the number of public domain and licensed works that can be
+freely distributed in machine-readable form accessible by the widest
+array of equipment including outdated equipment. Many small donations
+($1 to $5,000) are particularly important to maintaining tax exempt
+status with the IRS.
+</div><div>
+The Foundation is committed to complying with the laws regulating
+charities and charitable donations in all 50 states of the United
+States. Compliance requirements are not uniform and it takes a
+considerable effort, much paperwork and many fees to meet and keep up
+with these requirements. We do not solicit donations in locations
+where we have not received written confirmation of compliance. To SEND
+DONATIONS or determine the status of compliance for any particular state
+visit <a href="https://www.gutenberg.org/donate/">www.gutenberg.org/donate</a>.
+</div><div>
+While we cannot and do not solicit contributions from states where we
+have not met the solicitation requirements, we know of no prohibition
+against accepting unsolicited donations from donors in such states who
+approach us with offers to donate.
+</div><div>
+International donations are gratefully accepted, but we cannot make
+any statements concerning tax treatment of donations received from
+outside the United States. U.S. laws alone swamp our small staff.
+</div><div>
+Please check the Project Gutenberg web pages for current donation
+methods and addresses. Donations are accepted in a number of other
+ways including checks, online payments and credit card donations. To
+donate, please visit: www.gutenberg.org/donate.
+</div><div class="secthead">
+Section 5. General Information About Project Gutenberg™ electronic works
+</div><div>
+Professor Michael S. Hart was the originator of the Project
+Gutenberg™ concept of a library of electronic works that could be
+freely shared with anyone. For forty years, he produced and
+distributed Project Gutenberg™ eBooks with only a loose network of
+volunteer support.
+</div><div>
+Project Gutenberg™ eBooks are often created from several printed
+editions, all of which are confirmed as not protected by copyright in
+the U.S. unless a copyright notice is included. Thus, we do not
+necessarily keep eBooks in compliance with any particular paper
+edition.
+</div><div>
+Most people start at our website which has the main PG search
+facility: <a href="https://www.gutenberg.org">www.gutenberg.org</a>.
+</div><div>
+This website includes information about Project Gutenberg™,
+including how to make donations to the Project Gutenberg Literary
+Archive Foundation, how to help produce our new eBooks, and how to
+subscribe to our email newsletter to hear about new eBooks.
+</div>
+
+ 
+            ` };
+
+        
+    </script>
+</body>
+</html> 

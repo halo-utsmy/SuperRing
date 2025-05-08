@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Header styles (same as Categories.html) */
+        .header {
+            background: #ffffff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* ... (copy other header styles from Categories.html) ... */
+
+        /* Book Details Styles */
+        .book-details-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+        }
+
+        .book-image-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .book-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .book-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .book-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .book-price {
+            font-size: 24px;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .book-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .chapters-section {
+            margin-top: 30px;
+        }
+
+        .chapters-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .chapters-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .chapter-number {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .chapter-title {
+            color: #333;
+        }
+
+        .purchase-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .buy-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .book-details-container {
+                grid-template-columns: 1fr;
+            }
+
+            .book-image-section {
+                position: static;
+            }
+
+            .book-image {
+                height: 400px;
+            }
+        }
+
+        /* Chapter Modal Styles */
+        .chapter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+        }
+
+        .chapter-modal-content {
+            position: relative;
+            background-color: white;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #007bff;
+        }
+
+        .chapter-content {
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .chapter-modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chapter-modal-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chapter-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #e9ecef;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Back Button Styles */
+        .back-button-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button i {
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .back-button-container {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as Categories.html) -->
+    <header class="header">
+        <!-- ... Copy header content from Categories.html ... -->
+    </header>
+
+    <div class="book-details-container">
+        <div class="book-image-section">
+            <img src="../../image/2025/book_7.jpg" alt="Book Cover" class="book-image">
+        </div>
+
+        <div class="book-info-section">
+            <h1 class="book-title">The incredible slingshot bombs</h1>
+            <p class="book-author">By Robert Moore Williams</p>
+
+            <div class="book-description">
+                <h2>Description</h2>
+                <p>
+                    The Press is strictly a one man country paper, but it prints the news, which was why I was out here in the hills. 
+                    There was news out here. Maybe it was mighty big news, too.
+                </p>
+            </div>
+
+            <div class="chapters-section">
+                <h2 class="chapters-title">Chapters</h2>
+                <div class="chapters-list">
+                    <div class="chapter-item" onclick="openChapter(1)">
+                        <div class="chapter-number">Chapter</div>
+                        <div class="chapter-title">The story talk about.....</div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Reading Modal -->
+    <div id="chapterModal" class="chapter-modal">
+        <div class="chapter-modal-content">
+            <span class="close-modal" onclick="closeChapter()">&times;</span>
+            <div class="chapter-modal-header">
+                <h2 id="modalChapterTitle" class="chapter-modal-title">Chapter 1: The Beginning</h2>
+            </div>
+            <div id="chapterContent" class="chapter-content">
+                <!-- Chapter content will be loaded here -->
+            </div>
+            <div class="chapter-navigation">
+                <button id="prevChapter" class="nav-button" onclick="navigateChapter(-1)">
+                    <i class="fas fa-arrow-left"></i> Previous Chapter
+                </button>
+                <button id="nextChapter" class="nav-button" onclick="navigateChapter(1)">
+                    Next Chapter <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button-container">
+        <div class="back-button" onclick="goBackToCategories()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+    </div>
+
+    <script>
+        class Book {
+            constructor(title, author, imageUrl, price, description) {
+                this.title = title;
+                this.author = author;
+                this.imageUrl = imageUrl;
+                this.price = price;
+                this.description = description;
+            }
+
+            displayBasicInfo() {
+                document.querySelector('.book-title').textContent = this.title;
+                document.querySelector('.book-author').textContent = `By ${this.author}`;
+                document.querySelector('.book-image').src = this.imageUrl;
+                document.querySelector('.book-image').alt = this.title;
+                document.querySelector('.book-price').textContent = `$${this.price.toFixed(2)}`;
+                document.querySelector('.book-description p').textContent = this.description;
+            }
+        }
+
+        class DetailedBook extends Book {
+            constructor(title, author, imageUrl, price, description, chapters) {
+                super(title, author, imageUrl, price, description);
+                this.chapters = chapters;
+            }
+
+            displayChapters() {
+                const chaptersContainer = document.querySelector('.chapters-list');
+                chaptersContainer.innerHTML = ''; // Clear existing chapters
+
+                this.chapters.forEach(chapter => {
+                    const chapterElement = document.createElement('div');
+                    chapterElement.className = 'chapter-item';
+                    chapterElement.onclick = () => this.openChapter(chapter.number);
+                    chapterElement.innerHTML = `
+                        <div class="chapter-number">Chapter ${chapter.number}</div>
+                        <div class="chapter-title">${chapter.title}</div>
+                    `;
+                    chaptersContainer.appendChild(chapterElement);
+                });
+            }
+
+            openChapter(chapterNum) {
+                try {
+                    const chapterContent = this.chapters.find(ch => ch.number === chapterNum).content;
+                    document.getElementById('chapterContent').innerHTML = chapterContent;
+                    document.getElementById('chapterModal').style.display = 'block';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling of background
+                } catch (error) {
+                    console.error("Error opening chapter:", error);
+                }
+            }
+        }
+
+        function openChapter(chapterNum) {
+            currentChapter = chapterNum;
+            const modal = document.getElementById('chapterModal');
+            const modalTitle = document.getElementById('modalChapterTitle');
+            const chapterContent = document.getElementById('chapterContent');
+            const prevButton = document.getElementById('prevChapter');//if any chapter
+            const nextButton = document.getElementById('nextChapter');// if any 
+
+            modalTitle.textContent = `Chapter ${chapterNum}: ${getChapterTitle(chapterNum)}`;
+            chapterContent.innerHTML = chapterContents[chapterNum];
+
+            // Update navigation buttons
+            prevButton.disabled = chapterNum === 1;
+            nextButton.disabled = chapterNum === totalChapters;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling of background
+        }
+
+        function closeChapter() {
+            const modal = document.getElementById('chapterModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        function navigateChapter(direction) {
+            const newChapter = currentChapter + direction;
+            if (newChapter >= 1 && newChapter <= totalChapters) {
+                openChapter(newChapter);
+            }
+        }
+
+        function getChapterTitle(chapterNum) {
+            const titles = {
+                1: 'The Beginning',
+               
+            };
+            return titles[chapterNum];
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chapterModal');
+            if (event.target === modal) {
+                closeChapter();
+            }
+        }
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (document.getElementById('chapterModal').style.display === 'block') {
+                if (event.key === 'Escape') {
+                    closeChapter();
+                } else if (event.key === 'ArrowLeft') {
+                    navigateChapter(-1);
+                } else if (event.key === 'ArrowRight') {
+                    navigateChapter(1);
+                }
+            }
+        });
+
+       
+        function goBackToCategories() {
+            window.location.href = '../../Main/Categories.html';
+        }
+
+      
+        let currentChapter = 1;
+        const totalChapters = 1;
+
+        // Sample chapter content - In a real application, this would come from a database
+        const chapterContents = {
+            1: `
+
+            
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"><style>
+#pg-header div, #pg-footer div {
+    all: initial;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 2em;
+}
+#pg-footer div.agate {
+    font-size: 90%;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+#pg-footer li {
+    all: initial;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-indent: -0.6em;
+}
+#pg-footer div.secthead {
+    font-size: 110%;
+    font-weight: bold;
+}
+#pg-footer #project-gutenberg-license {
+    font-size: 110%;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+#pg-header-heading {
+    all: inherit;
+    text-align: center;
+    font-size: 120%;
+    font-weight:bold;
+}
+#pg-footer-heading {
+    all: inherit;
+    text-align: center;
+    font-size: 120%;
+    font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#pg-header #pg-machine-header p {
+    text-indent: -4em;
+    margin-left: 4em;
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: medium
+}
+#pg-header #pg-header-authlist {
+    all: initial;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#pg-header #pg-machine-header strong {
+    font-weight: normal;
+}
+#pg-header #pg-start-separator, #pg-footer #pg-end-separator {
+    margin-bottom: 3em;
+    margin-left: 0;
+    margin-right: auto;
+    margin-top: 2em;
+    text-align: center
+}
+
+    .xhtml_center {text-align: center; display: block;}
+    .xhtml_center table {
+        display: table;
+        text-align: left;
+        margin-left: auto;
+        margin-right: auto;
+        }</style><title>
+      The Incredible Slingshot Bombs | Project Gutenberg
+    </title>
+    <link href="images/cover.jpg" rel="icon" type="image/x-cover" id="id-8643774301591114192">
+    <style>@media screen {
+    body {
+        margin-left: 10%;
+        margin-right: 10%
+        }
+    }
+.pagedjs_page_content > div {
+    margin-left: 10%;
+    margin-right: 10%
+    }
+h1, h2 {
+    text-align: center;
+    clear: both
+    }
+p {
+    margin-top: 0.51em;
+    text-align: justify;
+    margin-bottom: 0.49em
+    }
+hr {
+    width: 33%;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    margin-left: 33.5%;
+    margin-right: 33.5%;
+    clear: both
+    }
+hr.tb {
+    width: 45%;
+    margin-left: 27.5%;
+    margin-right: 27.5%
+    }
+hr.chap {
+    width: 65%;
+    margin-left: 17.5%;
+    margin-right: 17.5%
+    }
+@media print {
+    hr.chap {
+        display: none;
+        visibility: hidden
+        }
+    }
+hr.full {
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%
+    }
+div.chapter {
+    page-break-before: always
+    }
+h2.nobreak {
+    page-break-before: avoid
+    }
+x-ebookmaker-drop {
+    display: none
+    }
+.center {
+    text-align: center
+    }
+.right {
+    text-align: right
+    }
+.smcap {
+    font-variant: small-caps
+    }
+.figcenter {
+    margin: auto;
+    text-align: center;
+    page-break-inside: avoid;
+    max-width: 100%
+    }
+.caption p {
+    text-align: center;
+    text-indent: 0;
+    margin: 0.25em 0;
+    font-weight: bold
+    }
+div.titlepage {
+    text-align: center;
+    page-break-before: always;
+    page-break-after: always
+    }
+div.titlepage p {
+    text-align: center;
+    text-indent: 0;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-top: 3em
+    }
+.ph1 {
+    text-align: center;
+    text-indent: 0
+    }
+.ph1 {
+    font-size: x-large;
+    margin: 0.83em auto
+    }</style>
+<link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
+<link rel="schema.dcterms" href="http://purl.org/dc/terms/">
+<meta name="dc.title" content="The incredible slingshot bombs">
+<meta name="dc.language" content="en">
+<meta name="dcterms.source" content="https://www.gutenberg.org/files/75427/75427-h/75427-h.htm">
+<meta name="dcterms.modified" content="2025-03-30T07:35:51.580249+00:00">
+<meta name="dc.rights" content="Public domain in the USA.">
+<link rel="dcterms.isFormatOf" href="http://www.gutenberg.org/ebooks/75427">
+<meta name="dc.creator" content="Williams, Robert Moore, 1907-1977">
+<meta name="marcrel.ill" content="Fuqua, Robert, 1905-1959">
+<meta name="dc.subject" content="Science fiction">
+<meta name="dc.subject" content="Short stories">
+<meta name="dc.subject" content="Journalists -- Fiction">
+<meta name="dc.subject" content="Bombs -- Fiction">
+<meta name="dcterms.created" content="2025-02-20">
+<meta name="generator" content="Ebookmaker 0.13.6 by Project Gutenberg">
+<meta property="og:title" content="The incredible slingshot bombs">
+<meta property="og:type" content="Text">
+<meta property="og:url" content="https://www.gutenberg.org/cache/epub/75427/pg75427-images.html">
+<meta property="og:image" content="https://www.gutenberg.org/cache/epub/75427/pg75427.cover.medium.jpg">
+</head>
+<body><section class="pg-boilerplate pgheader" id="pg-header" lang="en"><h2 id="pg-header-heading" title="">The Project Gutenberg eBook of <span lang="en" id="pg-title-no-subtitle">The incredible slingshot bombs</span></h2>
+    
+<div>This ebook is for the use of anyone anywhere in the United States and
+most other parts of the world at no cost and with almost no restrictions
+whatsoever. You may copy it, give it away or re-use it under the terms
+of the Project Gutenberg License included with this ebook or online
+at <a class="reference external" href="https://www.gutenberg.org">www.gutenberg.org</a>. If you are not located in the United States,
+you will have to check the laws of the country where you are located
+before using this eBook.</div>
+
+<div class="container" id="pg-machine-header"><p><strong>Title</strong>: The incredible slingshot bombs</p>
+<div id="pg-header-authlist">
+<p><strong>Author</strong>: Robert Moore Williams</p>
+
+<p><strong>Illustrator</strong>: Robert Fuqua</p>
+</div>
+<p><strong>Release date</strong>: February 20, 2025 [eBook #75427]</p>
+
+<p><strong>Language</strong>: English</p>
+
+<p><strong>Original publication</strong>: Chicago, IL: Ziff-Davis Publishing Company, 1942</p>
+
+<p><strong>Credits</strong>: Greg Weeks, Mary Meehan and the Online Distributed Proofreading Team at http://www.pgdp.net</p>
+
+</div><div id="pg-start-separator">
+<span>*** START OF THE PROJECT GUTENBERG EBOOK THE INCREDIBLE SLINGSHOT BOMBS ***</span>
+</div></section><div style="text-align:center"></div>
+
+<div class="titlepage">
+
+<h1>The Incredible Slingshot Bombs</h1>
+
+<p class="ph1">By ROBERT MOORE WILLIAMS</p>
+
+<p>It was only a slingshot, but it hurled more<br>
+death than a thousand-pound bomb. Where did<br>
+Tommy Sonofagun get those deadly pellets?</p>
+
+<p>[Transcriber's Note: This etext was produced from<br>
+Amazing Stories May 1942.<br>
+Extensive research did not uncover any evidence that<br>
+the U.S. copyright on this publication was renewed.]</p>
+
+</div>
+
+<hr class="chap">
+
+<div class="figcenter" role="figure" aria-labelledby="ebm_caption0">
+  <img alt="" src="images/illus.jpg" id="img_images_illus.jpg">
+  <div class="caption" id="ebm_caption0">
+    <p>Tommy Sonofagun drew back the sling and let fly with a pellet.</p>
+  </div>
+</div>
+
+<hr class="chap">
+
+<p>"You go over to the other ridge," the sheriff said to the two deputies.
+"If he tries to get out that way, stop him. But remember, we want him
+alive, <i>if we can get him that way</i>."</p>
+
+<p>I only half heard what the sheriff said. My attention was fully
+occupied by the dogs down in Ten Mile Valley below us. I couldn't see
+them but I could hear them bugling down there in the cedar thickets.
+Baying slowly and mournfully, they were searching for the lost trail. A
+creek ran down the middle of the valley. Probably Tommy Sonofagun had
+crossed the creek and thrown the bloodhounds off his trail. Tommy might
+be a moron but he had enough animal cunning to lose a pack of hounds
+that were after him.</p>
+
+<p>His name wasn't really Tommy Sonofagun. It was Tommy Britten, but the
+loafers around Brock's Tavern had taught him to say that his name was
+Tommy Sonofagun. <i>They</i> thought this was funny.</p>
+
+<p>The sheriff and I watched the two deputies tramp down into Ten Mile
+Valley, but we lost sight of them before they reached the farther
+ridge. The steel towers of an electric high-line ran along this ridge
+for a couple of miles, then dipped down and crossed the valley. The
+transmission line carried current from the big dam about twenty miles
+to the north. When the war first started, there was some fear that
+enemy agents might sabotage this high-line and the sheriff had spent
+most of his time out in the hills guarding it.</p>
+
+<p>The sheriff was a big, raw-boned mountaineer by the name of Tim
+Hoskins. He wore store clothes like they were overalls, he was long and
+lank, and if you took one look at him, you had the instant impression
+he had just enough sense to come in out of the rain, and no more. If
+you took a second look and noticed the slow cautious way he talked and
+the slow but damned sure way he moved, and especially if you looked at
+his eyes, which never faltered from the gaze of any man, you would be
+likely to decide you were damned glad you lived in a country where they
+had sheriffs like this.</p>
+
+<p>"What do you make of it, sheriff?" I asked.</p>
+
+<p>He was carrying his left arm in a bloody sling. Before he answered he
+adjusted the sling so his arm hung a little easier. Then he shook his
+head. "I don't know, Ben. I just don't know."</p>
+
+<p>I'm Ben Hopper, and for the past four years I've been owner and
+publisher of the Summit Press. I'm also editor of this paper,
+advertising manager, circulation manager, business manager, proof
+reader, and copy boy. The Press is strictly a one man country paper,
+but it prints the news, which was why I was out here in the hills.
+There was news out here. Maybe it was mighty big news, too.</p>
+
+<hr class="tb">
+
+<p>I was going to ask some more questions but the clatter of an
+over-worked motor interrupted me and I turned in time to see a car
+banging up the gravel road toward us. It was a gray Ford coupe and I
+needed only one glance to recognize it and to know who was driving it.
+Ellen Briscoe. Uncle Sam sent her out here to try to teach the people
+on the hill farms how to keep from starving to death. The Relief Lady,
+the mountaineers called her. She was coming up the hill road like she
+didn't know there was any such thing as tire rationing. Steam popped
+out of the radiator as the car reached us. She was out of it almost
+before it stopped rolling.</p>
+
+<p>"Hello, Ben," she said to me.</p>
+
+<p>"Ellen, you got no business being here," I protested.</p>
+
+<p>She ignored me. She had business wherever she wanted to be, which was
+anywhere anybody was in trouble. "Sheriff, what's this all about?" she
+demanded.</p>
+
+<p>Hoskins scraped a toe against the rocky ground. "I—I don't know for
+sure, Miss Ellen," he said.</p>
+
+<p>"I heard about it in Summit," she said. "And I came right up here. They
+told me in Summit that you had organized a posse and gone after Tommy.
+Sheriff, what has Tommy done?"</p>
+
+<p>Those were the words she used. The tone of her voice said more than the
+words.</p>
+
+<p>The sheriff wore out a lot of shoe leather before he answered. "Sim
+Brock swore out a warrant," he said at last. "I don't have any choice
+about serving it."</p>
+
+<p>"Sim Brock swore out a warrant, did he?" Fire flashed from her eyes.
+"Don't you know those loafers down at the roadhouse Brock runs are
+always teasing Tommy?"</p>
+
+<p>"I know, Miss Ellen," the sheriff said uncomfortably.</p>
+
+<p>"Were they teasing him and did he strike at one of them? Is that why
+you've got this posse after Tommy?"</p>
+
+<p>"No," the sheriff said. "They might have been teasing him before it
+happened but I don't know that they were. The warrant charged Tommy
+with blowing up Brock's barn."</p>
+
+<p>"Blowing up his barn!"</p>
+
+<p>"That was the way Brock swore out the warrant."</p>
+
+<p>"And you believed Sim Brock?" Ellen demanded. "Don't you know he's a
+liar and a no-good scoundrel. Don't you know that nobody can believe
+anything Brock says?"</p>
+
+<p>"Yes," the sheriff slowly said. "But the barn was blown up. I went to
+look. I didn't put any faith in what Brock said, but the warrant had
+been sworn out and I had to act. So I went looking for Tommy—"</p>
+
+<p>"With a gun in your hand, I suppose?" she said sharply.</p>
+
+<hr class="tb">
+
+<p>He looked at her then, just glanced up, but his gaze didn't falter.
+"You know better than that, Miss Ellen," he said.</p>
+
+<p>She flushed. Her temper had been running away with her and she knew it.
+"I'm sorry," she said. "What happened?"</p>
+
+<p>"I didn't have much trouble finding Tommy," the sheriff explained. "He
+was crossing a field when I spotted him. I stopped my car and walked
+toward him—<i>and he took a shot at me</i>."</p>
+
+<p>Down in this country you may do a little private feuding with your
+neighbors but there is one thing you don't do. You don't shoot at the
+sheriff.</p>
+
+<p>"He shot at you!" Ellen gasped. "Where did he get a gun?"</p>
+
+<p>"He didn't have a gun."</p>
+
+<p>Ellen's face showed confusion. "Then how did he shoot at you?" she
+demanded.</p>
+
+<p>"With that slingshot he always carries," the sheriff said.</p>
+
+<p>Tommy's favorite weapon, in fact his only weapon, was a rubber
+slingshot. A pocket full of pebbles and a sling was all he needed to be
+happy.</p>
+
+<p>"Sheriff," Ellen's voice was hot again. "Just because he shot at you
+with a sling is no reason why you should call out a posse and run him
+down like a mad dog?"</p>
+
+<p>"No," the sheriff admitted. "Especially since he didn't hit me."</p>
+
+<p>"He didn't hit you! And you—"</p>
+
+<p>"He hit my car," the sheriff said.</p>
+
+<p>Ellen's face blazed with anger. "So what? A few more nicks in that
+rattle-trap of yours won't make any difference."</p>
+
+<p>"No, Miss Ellen," the sheriff said, his voice dry and tense. "Not any
+more."</p>
+
+<p>"Not any more! <i>What are you talking about?</i>"</p>
+
+<p>"Not any car any more," the sheriff said. "It blew up."</p>
+
+<p>"Blew up!" the girl gasped.</p>
+
+<p>"Sky high," the sheriff said. "Chunks of the motor landed a quarter of
+a mile away. Piece of hot metal hit me—" He looked down at the bloody
+sling holding his arm. "That's where I got this."</p>
+
+<p>I had already seen what was left of his car, which was mostly a hole
+in the ground. A case of dynamite wouldn't have blown it into smaller
+pieces.</p>
+
+<p>"I got two reasons for wanting to catch Tommy," the sheriff continued.
+"First, I got a warrant that says I must arrest him. Second, I want to
+look at those pebbles he's shooting out of that slingshot."</p>
+
+<hr class="tb">
+
+<p>You can damned well bet he wanted to look at those pebbles! So did I.
+If a pebble small enough to be shot out of a sling could blow up a car,
+it was a mighty powerful and mighty important chunk of rock. Think how
+big an explosion a pebble as big as a baseball would make! Think how
+many baseballs could be carried in a bomber!</p>
+
+<p><i>What was Tommy Sonofagun shooting in his sling?</i></p>
+
+<p>"I just can't believe it," Ellen said, when she had recovered from her
+surprise. "Tommy didn't cause those explosions. Your car just happened
+to blow up at that moment. Tommy didn't do it. He couldn't have done
+it. It's—it's impossible."</p>
+
+<p>The sheriff didn't argue with her and neither did I. We were both
+watching what was happening down in Ten Mile Valley. Those bloodhounds,
+after being baffled for a long time, had suddenly hit a hot trail.</p>
+
+<p>Then Tommy appeared. He dashed across a glade in the cedar thickets,
+running half bent over like some ungainly animal. He was so far away he
+was just a little black dot but I saw him look back over his shoulder
+at the dogs.</p>
+
+<p>They were right behind him. I heard them break into an excited bugling
+as they saw their prey and started running by sight instead of by scent.</p>
+
+<p>Tommy frantically ran into the cedars.</p>
+
+<p>The dogs raced across the glade after him. There were four of them,
+running in a bunch, and giving tongue as they ran.</p>
+
+<p><i>They vanished in a puff of white light.</i></p>
+
+<p>It happened almost too fast for the mind to grasp it. One second four
+bloodhounds were running across the glade, the next second there was an
+intense puff of light, the third second the whole glade seemed to take
+wings and fly up into the air, the fourth second—</p>
+
+<p><i>Boom!</i></p>
+
+<p>The sound of the explosion reached us. A ball of smoke leaped upward
+and the cedar trees bent over in a blast of air. In the silence that
+followed came the faint clatter of stones falling back to the ground.
+There wasn't another bark from those dogs. There weren't any dogs left
+to do any barking.</p>
+
+<hr class="tb">
+
+<p>The sheriff's face turned a pasty gray. I believe from the bottom of my
+heart that he is scared of nothing, that he doesn't know the meaning
+of fear, but when that explosion came his face turned gray. He glanced
+once at Ellen as if he was asking her if this confirmed the wisdom of
+his decision to send a posse after Tommy Sonofagun. So far as I was
+concerned, it did. Then he started walking away.</p>
+
+<p>"Where are we going?" I called after him.</p>
+
+<p>"Down there," he said, nodding toward the glade where the explosion had
+taken place. "I reckon maybe I better get Tommy, if I can."</p>
+
+<p>Ellen and I stayed on top of the ridge and watched. Ellen hadn't spoken
+a word since the explosion but from the way she was holding on to my
+arm, I knew how scared she was. I could feel her tremble.</p>
+
+<p>The sheriff vanished among the cedars down below but I knew he was
+down there somewhere stalking Tommy Sonofagun. I also knew that other
+deputies were moving up from below while still another group had
+probably cut across the valley up above. A grim trap was closing.</p>
+
+<p>"What can it possibly mean?" Ellen whispered.</p>
+
+<p>"It means you had better go home," I answered.</p>
+
+<p>She wouldn't go. She was the Relief Lady and Tommy was somebody who
+might need help.</p>
+
+<p>It was already late in the afternoon. We stayed there on top of the
+ridge while darkness fell and waited for—anything. I shivered every
+time I thought of the explosion that had killed those four dogs. A hand
+grenade would not have caused so much destruction. There wasn't any
+chance of coincidence either. Those dogs had been after Tommy and he
+had destroyed them.</p>
+
+<p>"Ben," said Ellen suddenly. "We've got to find Tommy."</p>
+
+<p>"Huh?" Even the idea startled me.</p>
+
+<p>"We've got to find him before the posse does. Those men are scared and
+they won't take any chances with him. Even the sheriff is scared. If
+they find Tommy and he tries to run—and that's what he will try to
+do—they'll shoot him. Ben, we've got to find him first, to save his
+life."</p>
+
+<p>It took some time for this to sink in. And when it did sink in, I
+didn't like it. I tried to laugh it off. "A fine chance we have of
+finding him when this posse can't."</p>
+
+<p>"I can find him. I know where he is."</p>
+
+<p>"What?"</p>
+
+<p>"He has a cave about a mile from here. Every time he gets in trouble he
+runs there and hides. That's where he was going when those dogs almost
+caught him, to his cave. If we go there, we're almost certain to find
+him."</p>
+
+<p>"And get ourselves blown into mince-meat like those dogs!" I protested.</p>
+
+<p>"He won't—do anything to me. He knows me. I'm his friend."</p>
+
+<p>"Nuts, baby. We're not going."</p>
+
+<p>"All right," she said defiantly. "I'll go alone." She started walking
+away.</p>
+
+<p>"All right," I groaned. "I'll go with you. But you're taking an unfair
+advantage of me, and I know it."</p>
+
+<hr class="tb">
+
+<p>The cave was in a ravine that led off from Ten Mile Valley. By the time
+we reached the place the moon was up but there wasn't much light down
+in the bottom of the ravine. Clumps of cedars grew everywhere, making
+dark blotches behind which anything might be lurking. A darker blotch
+was the mouth of the cave.</p>
+
+<p>"T—Tommy," Ellen called.</p>
+
+<p>There was no answer. I stood there in the darkness and wished to hell I
+was back in my office setting this story in type. Ellen was clinging to
+me so hard she was about to pull my arm off.</p>
+
+<p>A shadow seemed to move in the mouth of the cave.</p>
+
+<p>"Tommy," Ellen said quickly. "Don't be afraid. We've brought you some
+candy, Tommy. Don't you want some candy?"</p>
+
+<p>Silence. A wind went whispering through the cedars, setting my teeth to
+chattering.</p>
+
+<p>"We have some candy, Tommy?"</p>
+
+<p>There was a tiny creak, as of somebody shifting his weight. It came
+from the cave. I did not in the least doubt but that Tommy Sonofagun
+was standing there looking out at us, slingshot in hand, trying to make
+up his poor mind if we were after him. At this moment my memory chose
+to remind me of what had happened to those bloodhounds. They had been
+after him too. Anything that was after him he would shoot at.</p>
+
+<p>Cold sweat was dripping from under my arms and running down my body.</p>
+
+<p>"Why don't you come down and get the candy we brought you?" Ellen asked.</p>
+
+<p>"Scared," a dull, choked voice said from the mouth of the cave.</p>
+
+<p>Tommy was there all right. He was watching us. He wanted candy. But he
+was scared.</p>
+
+<p>He wasn't a tenth as scared as I was! Dillinger with a pistol would not
+have been near as dangerous as this half man who lurked in the cave
+mouth. You could talk to Dillinger. He wouldn't shoot without a reason.
+You could talk to Tommy but he wouldn't understand.</p>
+
+<p>"You needn't be scared," Ellen said. "We won't hurt you. Don't you
+remember all the candy I've brought you? Don't you remember that new
+pair of overalls I brought you last month? Weren't they fine overalls,
+Tommy?"</p>
+
+<p>"Uh-huh. Nice. Wearin' 'em now." He didn't sound quite so hostile.</p>
+
+<p>"Come and get the candy," Ellen said, opening her purse.</p>
+
+<hr class="tb">
+
+<p>It took her five minutes to get him down out of that cave. Those were
+five minutes of hell for me. Ellen's voice showed no trace of concern,
+no fear, no worry. Listening to her, you would have thought she hadn't
+a care in the world. Only the way she was holding on to my arm showed
+me how scared she was.</p>
+
+<p>"Here," she said, handing him a candy bar.</p>
+
+<p>He ate it, paper cover, tin foil, and all. He didn't look at me. He saw
+me all right but he didn't trust me so he didn't glance in my direction.</p>
+
+<p>"How did you make the big noises?" Ellen quietly asked.</p>
+
+<p>"Huh? Big noises?"</p>
+
+<p>He sounded scared again. I took a firm grip on a lungful of air and
+prepared to hold on to it.</p>
+
+<p>"The big booms," Ellen said. "You know, like firecrackers, only lots
+louder. They sure were fine noises."</p>
+
+<p>"You like 'em, huh? Want hear more big noises, huh? Fourth of July
+noises, huh?"</p>
+
+<p>My eyes had become accustomed to the darkness and I saw him lift his
+arms and stretch his slingshot rubbers. "Want more noises, huh?" he
+asked proudly.</p>
+
+<p>"Not now, Tommy," Ellen said quickly, a sudden catch in her voice. "Let
+me see one of the firecrackers that make the big noises."</p>
+
+<p>"Huh?" He lowered his arms but he held the sling ready. His grunt was
+full of suspicion.</p>
+
+<p>"I'll give you another candy bar for one of your firecrackers," Ellen
+said quickly. She opened her purse and I heard the rattle of waxed
+paper. "I'll trade you a candy bar for a firecracker. You want another
+candy bar, don't you, Tommy? Remember how good that last candy bar was?"</p>
+
+<p>He remembered all right. His eyes never left the bar of chocolate she
+was holding toward him.</p>
+
+<p>I went right on holding my breath.</p>
+
+<p>"Okay," he said suddenly. "Trade." He took something out of the pocket
+of his sling, dropped it in Ellen's hand, grabbed the candy bar, and
+started eating.</p>
+
+<p>"Flashlight," Ellen whispered to me. To Tommy she said, "We're going
+to turn on a flashlight so we can look at the firecracker. It's a good
+candy bar, isn't it, Tommy?"</p>
+
+<p>My hands were shaking so badly I could barely hold the light. Ellen was
+holding the firecracker in the palm of her hand. I took one look at it,
+and I didn't believe my eyes.</p>
+
+<p>It was about the size of a big pea. It wasn't as big as a grape. It
+looked like a small round pebble.</p>
+
+<p>This was the bomb that had caused those terrific explosions!</p>
+
+<p>"Is this what made the big noises?" Ellen asked.</p>
+
+<p>"Sure," Tommy said, stopping eating long enough to talk. "Make big
+boom. Want more? Got plenty." He reached into a pocket of his overalls
+and brought out a handful. "Good shootin' rocks," he said.</p>
+
+<hr class="tb">
+
+<p>I just didn't believe it. There are mental limits beyond which the mind
+refuses to function. It was impossible to think that such a tiny pellet
+could cause so much destruction.</p>
+
+<p>I took Tommy's sling, put the pellet in the pocket, stretched the
+rubbers as far as they would go, and released them. I had to see with
+my own eyes, I had to know, I had to be sure.</p>
+
+<p>I damned well found out! Although the explosion took place at least
+seventy-five yards away, it blew me off my feet. A great bulge of flame
+leaped into the sky and the heavens roared with the thunder of the
+sound.</p>
+
+<p>Tommy jumped up and down in excitement. "Big noise! Goody, goody! Want
+more booms?"</p>
+
+<p>"N—nnn—no," I stuttered, picking myself up from the ground.</p>
+
+<p>"Ben, you idiot!" Ellen snapped. "The sheriff will hear that. No,
+Tommy, no more booms right now. Where did you get those firecrackers,
+Tommy? Where did you get them?"</p>
+
+<p>Firecrackers, hell! Those things were the mightiest explosive bombs for
+their weight ever used on earth! In violence they backed TNT right off
+the map. Nitroglycerin was not a tenth as powerful. If a pellet that
+weighed a fraction of an ounce could cause such an explosion, how big
+an explosion would a hundred-pound bomb make?</p>
+
+<p>One bomber could sneak in out of the clouds and smash a city!</p>
+
+<p>One bomb would do the job!</p>
+
+<p><i>Where had Tommy Sonofagun gotten those round pebbles that exploded
+with such violence?</i></p>
+
+<p>"Candy?" he said questioningly. "More candy?"</p>
+
+<p>"I'll give you a barrel of candy if you will show us where you got
+these things!" I said. I was scared sick. I was remembering Pearl
+Harbor, the <i>Prince of Wales</i>, and the <i>Repulse</i>. Had bombs such as
+these sent those two gallant ships to the bottom?</p>
+
+<p>If this had happened, how had similar bombs gotten here to the heart
+of America? Where were these round pebbles coming from? Obviously
+Tommy had found them somewhere, but <i>where</i>? Who had made them?</p>
+
+<p>"A barrel of candy!" Tommy gasped. "G—gosh!"</p>
+
+<hr class="tb">
+
+<p>Grabbing his slingshot from the ground where I had dropped it, he
+started off, motioning us to follow him. Stumbling, following him as
+best we could, he led us straight to one of the transmission line
+towers!</p>
+
+<p>"It was attempted sabotage!" I gasped. "Somebody tried to blow up the
+high-line but their bombs didn't explode. Tommy found their explosives!"</p>
+
+<p>This was a reasonable guess. If one of these big steel towers went
+down, a lot of defense industries that were dependent upon the juice
+flowing through the cables overhead, would have to shut down.</p>
+
+<p>"Got 'em right here," Tommy said.</p>
+
+<p>He shambled toward the legs of the tower, which formed an arch
+overhead. He was holding one of Ellen's hands and I was holding the
+other. We were strung out in a line. I could hear current singing in
+the transmission line as he went under the arch formed by the legs of
+the tower. It was a high, thin, wailing sound, and it meant that juice
+was leaking somewhere.</p>
+
+<p>He stepped through the arch, and vanished.</p>
+
+<p>Ellen, following a step behind him, vanished.</p>
+
+<p>I took another step, which brought me under the arch, <i>and the tower
+vanished</i>!</p>
+
+<p>One second it was there over my head, a steel lattice climbing skyward.
+The next second, no tower.</p>
+
+<p>No sky, no stars, no moon. No hillside, no high-line, no night.</p>
+
+<p>My tongue took a running jump and dived down into my throat to hide.</p>
+
+<p>"Wh—wh—wh—what the hell—" I heard my own voice say.</p>
+
+<p>I was in what looked like a big building. On one side was a lot of
+hooded machinery that was clicking softly to itself. I had the fleeting
+impression that this machinery was largely automatic in operation, that
+raw materials were being fed in from some source overhead and finished
+articles were rolling out into a large hopper. A soft blue light came
+from the walls of the building, which seemed to be windowless.</p>
+
+<p>Ellen was standing right in front of me. The only movement about her
+was a flutter of her eye-lids. She seemed to be frozen stiff.</p>
+
+<p>I was pretty well frozen myself. What the devil had happened to us?
+where were we?</p>
+
+<hr class="tb">
+
+<p>Mad thoughts were bouncing up and down inside my brain. I had the
+impression I had gone insane.</p>
+
+<p>Tommy wasn't scared. He didn't seem to mind what had happened.
+Something that would scare a man with sense to the verge of hysterics
+had no effect on him. He understood almost nothing about the world in
+which he lived and consequently anything was possible to him. There
+are times when being a moron has its advantages. This was one of those
+times. This building did not astonish Tommy, nor was he perturbed about
+the miraculous way in which we had entered it.</p>
+
+<p>He ran over to the hopper in front of the big machine, thrust both
+hands into it, and came running back to us, his hands held out in front
+of him.</p>
+
+<p>"Firecrackers!" he said exultantly.</p>
+
+<p>He had a double handful of the round explosive pellets. The machine was
+manufacturing them. They were being made right here in this windowless
+building, in Ten Mile Valley.</p>
+
+<p>This was where Tommy had got those incredible bombs. Somehow he had
+stumbled into this hidden place.</p>
+
+<p>He looked expectantly up at me.</p>
+
+<p>"Gimme bar'l of candy?" he said hopefully.</p>
+
+<p>My tongue was still hiding down in my throat as if it was determined
+to have no part in the lies it knew I was going to tell. "S—sure," I
+stuttered. "I'll get the candy for you as soon as we get back to town.
+But Tommy, where are we?"</p>
+
+<p>That was the question! Where were we?</p>
+
+<p>"Huh?" said Tommy. Then he added, in explanation, "We're here!"</p>
+
+<p>Hell, I knew that! What I wanted to know was where <i>here</i> was. I tried
+another tack. "Where did this building, all these machines, where did
+they come from?"</p>
+
+<p>He shrugged. The question was over his head. "Find 'em here," he said.
+He looked hopefully at me. "Candy for Tommy Sonofagun?"</p>
+
+<p>His little mind ran on one track. The building was here, the machines
+were here, facts to be accepted without question, just like the hills
+and the rain. He had found them here. That was all he knew about them.</p>
+
+<p>"Let's get out of this place," I said to Ellen. There was a dazed,
+glazed expression in her eyes. Her mind had refused to accept the
+evidence of her eyes and she had stopped thinking.</p>
+
+<p>In my mind was pure panic. Never in my life had I wanted to run so
+badly. The only thing that interested me was to get out of this place,
+fast! I was starting to do just that when a voice stopped me.</p>
+
+<p>"Here's that thief again," the voice said. At least that was what I
+thought it said. The words were English but they weren't like the
+English I know. The accent was all wrong and they were run together in
+a sing-songy effect. I turned to see who had spoken.</p>
+
+<hr class="tb">
+
+<p>Two men were standing in a door at the far end of the building.
+Apparently they had just entered. Dressed in glittering clothes, stern
+faced, they didn't look like any people I wanted to meet. I grabbed
+Ellen and started to run.</p>
+
+<p>"Alt!" the command came.</p>
+
+<p>I wasn't doing any halting. I was out of my mind from sheer fright. My
+sole interest lay in getting out of that place. I was so confused I
+didn't realize I didn't know how to get out and I did the only thing
+possible, which was to turn and run.</p>
+
+<p>As it worked out, this was exactly the right thing to do. A split
+second after I started to run, the building vanished.</p>
+
+<p>I was back at the high-line tower, not under it but beside it, with the
+night and the stars and the moon around me, and the high-pitched whine
+of leaking current in my ears. I was back where I had started from and
+no building full of automatic machinery was in sight.</p>
+
+<p>"W—what's the matter?" Tommy gibbered beside me. He sensed how scared
+I was and this scared him.</p>
+
+<p>Ellen had quietly fainted. I threw her over my shoulder.</p>
+
+<p>"Run!" I shouted at Tommy.</p>
+
+<p>With him at my heels, I started making tracks away from there.</p>
+
+<p>"Alt!" came a high-pitched command from behind me.</p>
+
+<p>A streak of light drove through the night, passed within a foot of my
+head. It seemed to set the darkness on fire. The two men had taken a
+shot at us.</p>
+
+<p>This was all Tommy needed to convince him that something was really
+after him. He was already scared and when that streak of light went
+past us, he went crazy. Crouching and turning, he stretched the rubbers
+of that slingshot.</p>
+
+<p>"Don't shoot!" I screamed at him.</p>
+
+<p>It was too late. The rubbers blurred as he released the sling.</p>
+
+<p>Looking back I caught a glimpse of the two men. It was the same two
+all right. They were standing beside the tower. Looking completely
+bewildered, they were making no effort to stop us.</p>
+
+<p>Then the pellet hit them.</p>
+
+<p><i>Blooie!</i></p>
+
+<hr class="tb">
+
+<p>The blast hurled me forward but I managed to keep my feet and keep
+running. Fire spouted skyward, there was a crack of breaking steel.</p>
+
+<p>The tower was falling. The explosion had knocked the legs out from
+under it and it was falling.</p>
+
+<p>Somewhere over my head was a thrumming snap. I knew what it meant. The
+copper high-line cables, strained by the falling tower, were about to
+break. There were sixty-six thousand volts of electricity in those
+twanging cables.</p>
+
+<p>With Ellen in my arms I dived into a ravine. As I hit and rolled the
+night was cataclysmic with bursting flame. Arcs like bright flashes of
+lightning leaped against the sky as the cables parted. The live ends
+hit the ground and writhed like giant snakes spewing fifteen-feet-long
+streams of molten fire. There was juice in those cables, plenty of
+juice, and it was running wild.</p>
+
+<p>Somewhere, somebody screamed. Tommy! He was screaming. As if his scream
+was a signal, the whole earth seemed to gather itself together and
+hunch upward in one violent explosive blast. It knocked me cold. As I
+blacked out, I saw a great spout of flame leaping toward the stars and
+I remember thinking that the whole vault of heaven was on fire. Then
+something seemed to hit me on the head and I quit thinking.</p>
+
+<hr class="tb">
+
+<p>When I regained consciousness I was in a hospital and a nurse was
+bending over me. As soon as I opened my eyes, she went dashing out of
+the room, to return with a doctor. He poked and pried at me and finally
+said that he thought I would live. From the way I felt, this was more
+than I expected.</p>
+
+<p>The doctor had no more than left until there was a violent argument at
+the door. The nurse was telling someone that I couldn't have company
+and somebody else was saying I was going to have company, or else. Then
+Ellen was bending over me. "Ben, are you badly hurt?"</p>
+
+<p>I told her what the doctor had said and the relief that flooded her
+face almost made me feel romantic. She had a big patch of adhesive tape
+on her face and a lot of scratches and bruises but she was able to walk.</p>
+
+<p>"Ben, what happened?" she asked. "Those two men, that building, those
+machines—"</p>
+
+<p>"And those atomic bombs!" I said.</p>
+
+<p>"What? Atomic bombs? I don't understand. What were those men doing,
+Ben?"</p>
+
+<p>"Sabotage," I said firmly.</p>
+
+<p>"But it couldn't have been sabotage," she protested. "If they had
+wanted to blow up the high-line, they could have done it without any
+trouble. And that building and the high-line tower existed in the same
+place. Ben, it couldn't have been attempted sabotage. There must be
+some other explanation. I've thought and I've thought and I don't see
+the answer."</p>
+
+<p>"Just the same, it was sabotage," I said. "That's the way I am going to
+write the story."</p>
+
+<p>"You will be lying, Ben," said a voice from the doorway. I looked up.
+It was the sheriff. He came walking into the room. His arm was still in
+a sling and his face looked grayer than ever.</p>
+
+<p>"How did you get here?" I stuttered.</p>
+
+<p>"I found you and brought you in," he said. "The two of you." He pulled
+up a chair and sat down in a manner that indicated he planned to stay a
+while. "Now tell me the truth, you two," he said. "Tell me just exactly
+what happened, the way it happened."</p>
+
+<p>"You will call us liars," I protested.</p>
+
+<p>"That may be," he admitted. "But I want to hear it just the same."</p>
+
+<hr class="tb">
+
+<p>So we told him. He sat there and listened without a sign of expression
+on his face. For all the emotion he showed, he might have been made out
+of wood.</p>
+
+<p>"What do you make of it, Ben," he said at last, when we had finished.</p>
+
+<p>"Sabotage," I said.</p>
+
+<p>"What do you really think, Ben?" he came back.</p>
+
+<p>"Well," I said slowly. "There was a slight leakage of current down that
+particular tower. I think this leakage and the particular way in which
+it took place accidentally combined to make us the first time travelers
+in human history!"</p>
+
+<p>Ellen gasped at that but the sheriff didn't blink an eye.</p>
+
+<p>"Go on," he said.</p>
+
+<p>"I think that building exists in the future," I said. "I think it will
+exist some day and that it exists now and if we could cross time we
+could see it. Those men spoke a strange kind of English. That points
+to the future. They were making atomic bombs. We don't know how to
+make atomic bombs now but we will know how to do it, in the future. I
+think that building we entered was an arsenal of the future that will
+be built in Ten Mile Valley in some coming century. You asked me what I
+think and I've told you," I defiantly finished. "If you don't like it,
+you can think up your own explanation."</p>
+
+<p>He didn't budge. "Tommy?" he said, his voice a question.</p>
+
+<p>"Tommy accidentally blundered through the arch made by the legs of the
+tower. He found a machine making tiny atomic bombs. He didn't know
+they were bombs. He thought they were fine pebbles to shoot in his
+slingshot. And that's what he used them for. They exploded on contact.
+Maybe they were designed to be dropped from an airplane, hundreds at a
+time. Maybe they were to be used in interplanetary war. I don't know
+why they were being made. All I know is that an idiot found them, and
+thought they would be fine things to shoot in a sling. Incidentally,
+what happened to Tommy?"</p>
+
+<p>I had forgotten all about Tommy Sonofagun.</p>
+
+<p>"We found pieces of him," the sheriff sighed. "He had a pocketful of
+those pebbles when the falling cables hit him. They all exploded at
+once."</p>
+
+<p>Poor Tommy Sonofagun. He would never get his barrel of candy.</p>
+
+<p>Decisively the sheriff got to his feet. He stopped at the door and
+looked back. "You are right, Ben," he said. "It was attempted sabotage."</p>
+
+<p>And that's the way it went down in the official records, that's the way
+I wrote the story for my paper. The public would be willing to believe
+in sabotage. But would they be willing to believe in time travel?</p>
+
+<p>Not this century!
+</p>
+<div style="text-align:center"></div><section class="pg-boilerplate pgheader" id="pg-footer" lang="en">
+<div id="pg-end-separator">
+<span>*** END OF THE PROJECT GUTENBERG EBOOK THE INCREDIBLE SLINGSHOT BOMBS ***</span>
+</div>
+
+    
+<div>
+Updated editions will replace the previous one—the old editions will
+be renamed.
+</div><div>
+Creating the works from print editions not protected by U.S. copyright
+law means that no one owns a United States copyright in these works,
+so the Foundation (and you!) can copy and distribute it in the United
+States without permission and without paying copyright
+royalties. Special rules, set forth in the General Terms of Use part
+of this license, apply to copying and distributing Project
+Gutenberg™ electronic works to protect the PROJECT GUTENBERG™
+concept and trademark. Project Gutenberg is a registered trademark,
+and may not be used if you charge for an eBook, except by following
+the terms of the trademark license, including paying royalties for use
+of the Project Gutenberg trademark. If you do not charge anything for
+copies of this eBook, complying with the trademark license is very
+easy. You may use this eBook for nearly any purpose such as creation
+of derivative works, reports, performances and research. Project
+Gutenberg eBooks may be modified and printed and given away—you may
+do practically ANYTHING in the United States with eBooks not protected
+by U.S. copyright law. Redistribution is subject to the trademark
+license, especially commercial redistribution.
+</div>
+
+<div id="project-gutenberg-license">START: FULL LICENSE</div>
+
+<h2 id="pg-footer-heading">THE FULL PROJECT GUTENBERG LICENSE</h2>
+
+<div class="agate">PLEASE READ THIS BEFORE YOU DISTRIBUTE OR USE THIS WORK
+</div><div>
+To protect the Project Gutenberg™ mission of promoting the free
+distribution of electronic works, by using or distributing this work
+(or any other work associated in any way with the phrase “Project
+Gutenberg”), you agree to comply with all the terms of the Full
+Project Gutenberg™ License available with this file or online at
+www.gutenberg.org/license.
+</div><div class="secthead">
+Section 1. General Terms of Use and Redistributing Project Gutenberg™
+electronic works
+</div><div>
+1.A. By reading or using any part of this Project Gutenberg™
+electronic work, you indicate that you have read, understand, agree to
+and accept all the terms of this license and intellectual property
+(trademark/copyright) agreement. If you do not agree to abide by all
+the terms of this agreement, you must cease using and return or
+destroy all copies of Project Gutenberg™ electronic works in your
+possession. If you paid a fee for obtaining a copy of or access to a
+Project Gutenberg™ electronic work and you do not agree to be bound
+by the terms of this agreement, you may obtain a refund from the person
+or entity to whom you paid the fee as set forth in paragraph 1.E.8.
+</div><div>
+1.B. “Project Gutenberg” is a registered trademark. It may only be
+used on or associated in any way with an electronic work by people who
+agree to be bound by the terms of this agreement. There are a few
+things that you can do with most Project Gutenberg™ electronic works
+even without complying with the full terms of this agreement. See
+paragraph 1.C below. There are a lot of things you can do with Project
+Gutenberg™ electronic works if you follow the terms of this
+agreement and help preserve free future access to Project Gutenberg™
+electronic works. See paragraph 1.E below.
+</div><div>
+1.C. The Project Gutenberg Literary Archive Foundation (“the
+Foundation” or PGLAF), owns a compilation copyright in the collection
+of Project Gutenberg™ electronic works. Nearly all the individual
+works in the collection are in the public domain in the United
+States. If an individual work is unprotected by copyright law in the
+United States and you are located in the United States, we do not
+claim a right to prevent you from copying, distributing, performing,
+displaying or creating derivative works based on the work as long as
+all references to Project Gutenberg are removed. Of course, we hope
+that you will support the Project Gutenberg™ mission of promoting
+free access to electronic works by freely sharing Project Gutenberg™
+works in compliance with the terms of this agreement for keeping the
+Project Gutenberg™ name associated with the work. You can easily
+comply with the terms of this agreement by keeping this work in the
+same format with its attached full Project Gutenberg™ License when
+you share it without charge with others.
+</div><div>
+1.D. The copyright laws of the place where you are located also govern
+what you can do with this work. Copyright laws in most countries are
+in a constant state of change. If you are outside the United States,
+check the laws of your country in addition to the terms of this
+agreement before downloading, copying, displaying, performing,
+distributing or creating derivative works based on this work or any
+other Project Gutenberg™ work. The Foundation makes no
+representations concerning the copyright status of any work in any
+country other than the United States.
+</div><div>
+1.E. Unless you have removed all references to Project Gutenberg:
+</div><div>
+1.E.1. The following sentence, with active links to, or other
+immediate access to, the full Project Gutenberg™ License must appear
+prominently whenever any copy of a Project Gutenberg™ work (any work
+on which the phrase “Project Gutenberg” appears, or with which the
+phrase “Project Gutenberg” is associated) is accessed, displayed,
+performed, viewed, copied or distributed:
+</div><blockquote><div>
+    This eBook is for the use of anyone anywhere in the United States and most
+    other parts of the world at no cost and with almost no restrictions
+    whatsoever. You may copy it, give it away or re-use it under the terms
+    of the Project Gutenberg License included with this eBook or online
+    at <a href="https://www.gutenberg.org">www.gutenberg.org</a>. If you
+    are not located in the United States, you will have to check the laws
+    of the country where you are located before using this eBook.
+  </div></blockquote><div>
+1.E.2. If an individual Project Gutenberg™ electronic work is
+derived from texts not protected by U.S. copyright law (does not
+contain a notice indicating that it is posted with permission of the
+copyright holder), the work can be copied and distributed to anyone in
+the United States without paying any fees or charges. If you are
+redistributing or providing access to a work with the phrase “Project
+Gutenberg” associated with or appearing on the work, you must comply
+either with the requirements of paragraphs 1.E.1 through 1.E.7 or
+obtain permission for the use of the work and the Project Gutenberg™
+trademark as set forth in paragraphs 1.E.8 or 1.E.9.
+</div><div>
+1.E.3. If an individual Project Gutenberg™ electronic work is posted
+with the permission of the copyright holder, your use and distribution
+must comply with both paragraphs 1.E.1 through 1.E.7 and any
+additional terms imposed by the copyright holder. Additional terms
+will be linked to the Project Gutenberg™ License for all works
+posted with the permission of the copyright holder found at the
+beginning of this work.
+</div><div>
+1.E.4. Do not unlink or detach or remove the full Project Gutenberg™
+License terms from this work, or any files containing a part of this
+work or any other work associated with Project Gutenberg™.
+</div><div>
+1.E.5. Do not copy, display, perform, distribute or redistribute this
+electronic work, or any part of this electronic work, without
+prominently displaying the sentence set forth in paragraph 1.E.1 with
+active links or immediate access to the full terms of the Project
+Gutenberg™ License.
+</div><div>
+1.E.6. You may convert to and distribute this work in any binary,
+compressed, marked up, nonproprietary or proprietary form, including
+any word processing or hypertext form. However, if you provide access
+to or distribute copies of a Project Gutenberg™ work in a format
+other than “Plain Vanilla ASCII” or other format used in the official
+version posted on the official Project Gutenberg™ website
+(www.gutenberg.org), you must, at no additional cost, fee or expense
+to the user, provide a copy, a means of exporting a copy, or a means
+of obtaining a copy upon request, of the work in its original “Plain
+Vanilla ASCII” or other form. Any alternate format must include the
+full Project Gutenberg™ License as specified in paragraph 1.E.1.
+</div><div>
+1.E.7. Do not charge a fee for access to, viewing, displaying,
+performing, copying or distributing any Project Gutenberg™ works
+unless you comply with paragraph 1.E.8 or 1.E.9.
+</div><div>
+1.E.8. You may charge a reasonable fee for copies of or providing
+access to or distributing Project Gutenberg™ electronic works
+provided that:
+</div><ul>
+    <li>• You pay a royalty fee of 20% of the gross profits you derive from
+        the use of Project Gutenberg™ works calculated using the method
+        you already use to calculate your applicable taxes. The fee is owed
+        to the owner of the Project Gutenberg™ trademark, but he has
+        agreed to donate royalties under this paragraph to the Project
+        Gutenberg Literary Archive Foundation. Royalty payments must be paid
+        within 60 days following each date on which you prepare (or are
+        legally required to prepare) your periodic tax returns. Royalty
+        payments should be clearly marked as such and sent to the Project
+        Gutenberg Literary Archive Foundation at the address specified in
+        Section 4, “Information about donations to the Project Gutenberg
+        Literary Archive Foundation.”
+    </li>
+    <li>• You provide a full refund of any money paid by a user who notifies
+        you in writing (or by e-mail) within 30 days of receipt that s/he
+        does not agree to the terms of the full Project Gutenberg™
+        License. You must require such a user to return or destroy all
+        copies of the works possessed in a physical medium and discontinue
+        all use of and all access to other copies of Project Gutenberg™
+        works.
+    </li>
+    <li>• You provide, in accordance with paragraph 1.F.3, a full refund of
+        any money paid for a work or a replacement copy, if a defect in the
+        electronic work is discovered and reported to you within 90 days of
+        receipt of the work.
+    </li>
+    <li>• You comply with all other terms of this agreement for free
+        distribution of Project Gutenberg™ works.
+    </li>
+</ul><div>
+1.E.9. If you wish to charge a fee or distribute a Project
+Gutenberg™ electronic work or group of works on different terms than
+are set forth in this agreement, you must obtain permission in writing
+from the Project Gutenberg Literary Archive Foundation, the manager of
+the Project Gutenberg™ trademark. Contact the Foundation as set
+forth in Section 3 below.
+</div><div>
+1.F.
+</div><div>
+1.F.1. Project Gutenberg volunteers and employees expend considerable
+effort to identify, do copyright research on, transcribe and proofread
+works not protected by U.S. copyright law in creating the Project
+Gutenberg™ collection. Despite these efforts, Project Gutenberg™
+electronic works, and the medium on which they may be stored, may
+contain “Defects,” such as, but not limited to, incomplete, inaccurate
+or corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged disk or
+other medium, a computer virus, or computer codes that damage or
+cannot be read by your equipment.
+</div><div>
+1.F.2. LIMITED WARRANTY, DISCLAIMER OF DAMAGES - Except for the “Right
+of Replacement or Refund” described in paragraph 1.F.3, the Project
+Gutenberg Literary Archive Foundation, the owner of the Project
+Gutenberg™ trademark, and any other party distributing a Project
+Gutenberg™ electronic work under this agreement, disclaim all
+liability to you for damages, costs and expenses, including legal
+fees. YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+PROVIDED IN PARAGRAPH 1.F.3. YOU AGREE THAT THE FOUNDATION, THE
+TRADEMARK OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE
+LIABLE TO YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR
+INCIDENTAL DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH
+DAMAGE.
+</div><div>
+1.F.3. LIMITED RIGHT OF REPLACEMENT OR REFUND - If you discover a
+defect in this electronic work within 90 days of receiving it, you can
+receive a refund of the money (if any) you paid for it by sending a
+written explanation to the person you received the work from. If you
+received the work on a physical medium, you must return the medium
+with your written explanation. The person or entity that provided you
+with the defective work may elect to provide a replacement copy in
+lieu of a refund. If you received the work electronically, the person
+or entity providing it to you may choose to give you a second
+opportunity to receive the work electronically in lieu of a refund. If
+the second copy is also defective, you may demand a refund in writing
+without further opportunities to fix the problem.
+</div><div>
+1.F.4. Except for the limited right of replacement or refund set forth
+in paragraph 1.F.3, this work is provided to you ‘AS-IS’, WITH NO
+OTHER WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PURPOSE.
+</div><div>
+1.F.5. Some states do not allow disclaimers of certain implied
+warranties or the exclusion or limitation of certain types of
+damages. If any disclaimer or limitation set forth in this agreement
+violates the law of the state applicable to this agreement, the
+agreement shall be interpreted to make the maximum disclaimer or
+limitation permitted by the applicable state law. The invalidity or
+unenforceability of any provision of this agreement shall not void the
+remaining provisions.
+</div><div>
+1.F.6. INDEMNITY - You agree to indemnify and hold the Foundation, the
+trademark owner, any agent or employee of the Foundation, anyone
+providing copies of Project Gutenberg™ electronic works in
+accordance with this agreement, and any volunteers associated with the
+production, promotion and distribution of Project Gutenberg™
+electronic works, harmless from all liability, costs and expenses,
+including legal fees, that arise directly or indirectly from any of
+the following which you do or cause to occur: (a) distribution of this
+or any Project Gutenberg™ work, (b) alteration, modification, or
+additions or deletions to any Project Gutenberg™ work, and (c) any
+Defect you cause.
+</div><div class="secthead">
+Section 2. Information about the Mission of Project Gutenberg™
+</div><div>
+Project Gutenberg™ is synonymous with the free distribution of
+electronic works in formats readable by the widest variety of
+computers including obsolete, old, middle-aged and new computers. It
+exists because of the efforts of hundreds of volunteers and donations
+from people in all walks of life.
+</div><div>
+Volunteers and financial support to provide volunteers with the
+assistance they need are critical to reaching Project Gutenberg™’s
+goals and ensuring that the Project Gutenberg™ collection will
+remain freely available for generations to come. In 2001, the Project
+Gutenberg Literary Archive Foundation was created to provide a secure
+and permanent future for Project Gutenberg™ and future
+generations. To learn more about the Project Gutenberg Literary
+Archive Foundation and how your efforts and donations can help, see
+Sections 3 and 4 and the Foundation information page at www.gutenberg.org.
+</div><div class="secthead">
+Section 3. Information about the Project Gutenberg Literary Archive Foundation
+</div><div>
+The Project Gutenberg Literary Archive Foundation is a non-profit
+501(c)(3) educational corporation organized under the laws of the
+state of Mississippi and granted tax exempt status by the Internal
+Revenue Service. The Foundation’s EIN or federal tax identification
+number is 64-6221541. Contributions to the Project Gutenberg Literary
+Archive Foundation are tax deductible to the full extent permitted by
+U.S. federal laws and your state’s laws.
+</div><div>
+The Foundation’s business office is located at 809 North 1500 West,
+Salt Lake City, UT 84116, (801) 596-1887. Email contact links and up
+to date contact information can be found at the Foundation’s website
+and official page at www.gutenberg.org/contact
+</div><div class="secthead">
+Section 4. Information about Donations to the Project Gutenberg
+Literary Archive Foundation
+</div><div>
+Project Gutenberg™ depends upon and cannot survive without widespread
+public support and donations to carry out its mission of
+increasing the number of public domain and licensed works that can be
+freely distributed in machine-readable form accessible by the widest
+array of equipment including outdated equipment. Many small donations
+($1 to $5,000) are particularly important to maintaining tax exempt
+status with the IRS.
+</div><div>
+The Foundation is committed to complying with the laws regulating
+charities and charitable donations in all 50 states of the United
+States. Compliance requirements are not uniform and it takes a
+considerable effort, much paperwork and many fees to meet and keep up
+with these requirements. We do not solicit donations in locations
+where we have not received written confirmation of compliance. To SEND
+DONATIONS or determine the status of compliance for any particular state
+visit <a href="https://www.gutenberg.org/donate/">www.gutenberg.org/donate</a>.
+</div><div>
+While we cannot and do not solicit contributions from states where we
+have not met the solicitation requirements, we know of no prohibition
+against accepting unsolicited donations from donors in such states who
+approach us with offers to donate.
+</div><div>
+International donations are gratefully accepted, but we cannot make
+any statements concerning tax treatment of donations received from
+outside the United States. U.S. laws alone swamp our small staff.
+</div><div>
+Please check the Project Gutenberg web pages for current donation
+methods and addresses. Donations are accepted in a number of other
+ways including checks, online payments and credit card donations. To
+donate, please visit: www.gutenberg.org/donate.
+</div><div class="secthead">
+Section 5. General Information About Project Gutenberg™ electronic works
+</div><div>
+Professor Michael S. Hart was the originator of the Project
+Gutenberg™ concept of a library of electronic works that could be
+freely shared with anyone. For forty years, he produced and
+distributed Project Gutenberg™ eBooks with only a loose network of
+volunteer support.
+</div><div>
+Project Gutenberg™ eBooks are often created from several printed
+editions, all of which are confirmed as not protected by copyright in
+the U.S. unless a copyright notice is included. Thus, we do not
+necessarily keep eBooks in compliance with any particular paper
+edition.
+</div><div>
+Most people start at our website which has the main PG search
+facility: <a href="https://www.gutenberg.org">www.gutenberg.org</a>.
+</div><div>
+This website includes information about Project Gutenberg™,
+including how to make donations to the Project Gutenberg Literary
+Archive Foundation, how to help produce our new eBooks, and how to
+subscribe to our email newsletter to hear about new eBooks.
+</div>
+ 
+            ` };
+
+        
+    </script>
+</body>
+</html> 

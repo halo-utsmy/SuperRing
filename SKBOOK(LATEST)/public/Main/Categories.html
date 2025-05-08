@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/categories.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="left-section">
+                <a href="#" class="logo-container" onclick="goToHomePage()">
+                    <i class="fas fa-book-open home-button"></i>
+                    <div class="logo-content">
+                        <div class="logo-text">SK<span>Book</span></div>
+                        <div class="logo-tagline">Discover Your Next Adventure</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="center-section">
+               <nav class="nav-links">
+                <a href="../Main/Home_Page.html" class="nav-link">Home</a>
+                <a href="../Main/Categories.html" class="nav-link active">Books</a>
+                <a href="../Main/About_Us.html" class="nav-link">About Us</a>
+                </nav>
+            </div>
+
+            
+                <div class="auth-buttons">
+                    <button class="auth-button icon-btn" id="themeToggle" type="button">
+                    <i class="fas fa-sun"></i>
+                </button>
+                    <button class="auth-button icon-btn" id="notificationBtn" type="button">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <div class="notification-popup">
+                        <div class="notification-header">
+                            <h3>Recent Messages</h3>
+                            <button class="close-notification">×</button>
+                        </div>
+                        <div class="notification-content">
+                        </div>
+                    </div>
+                    <div class="language-selector">
+                        <button class="language-btn" id="languageToggle">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <div class="language-dropdown" id="languageDropdown">
+                            <a class="language-option" data-lang="en">English</a>
+                            <a class="language-option" data-lang="my">Bahasa Melayu</a>
+                            <a class="language-option" data-lang="zh">中文</a>
+                        </div>
+                    </div>
+                    <a href="#" class= "auth-button profile-btn" onclick="goToRegister()">P</a>
+            </div>
+        </header>
+    </div>
+
+
+    <div class="categories-container">
+    
+
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="title">2024</h2>
+            </div>
+            <div class="books-grid">
+                <!-- 2024 Book 1 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_1.png" alt="The Lost City" class="book-image">
+                    
+                    <div class="book-info">
+                        <h3 class="book-name">Fairy Tales of Hans Christian Andersen</h3>
+                        <p class="book-author">By H. C. Andersen</p>
+                        <a href="../book/2024/book1.html">Read Now</a>
+                  
+                    </div>
+                </div>
+                <!-- 2024 Book 2 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_2.jpg" alt="The Lost City" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">H. C. Andersen</h3>
+                        <p class="book-author">By Charles Neville Buck</p>
+                        <a href="../book/2024/book2.html">Read Now</a>
+                    </div>
+                </div>
+                <!-- 2024 Book 3 -->
+                <div class="book-card" >
+                    <img src="../image/2024/book_3.png" alt="Mountain Quest" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Gay Cockade</h3>
+                        <p class="book-author">By  Temple Bailey</p>
+                        <a href="../book/2024/book3.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- 2024 Book 4 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_4.jpg" alt="Ocean's Secret" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Strange Case of Dr. Jekyll and Mr. Hyde</h3>
+                        <p class="book-author">By Robert Louis Stevenson</p>
+                        <a href="../book/2024/book4.html">Read Now</a>
+                    
+                    </div>
+                </div>
+                <!-- 2024 Book 5 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_5.png" alt="Sky Raiders" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Will to Believe, and Other Essays in Popular Philosophy</h3>
+                        <p class="book-author">By William James</p>
+                        <a href="../book/2024/book5.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- 2024 Book 6 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_6.jpg" alt="Arctic Mission" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Great Gatsby</h3>
+                        <p class="book-author">By F. Scott Fitzgerald</p>
+                        <a href="../book/2024/book6.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- 2024 Book 7 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_7.jpg" alt="Jungle Warriors" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Dames</h3>
+                        <p class="book-author">By Murray Leinster</p>
+                        <a href="../book/2024/book7.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- 2024 Book 8 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_8.jpg" alt="Urban Chase" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">A Pail of Air</h3>
+                        <p class="book-author">By Fritz Leiber</p>
+                        <a href="../book/2024/book8.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- 2024 Book 9 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_9.jpg" alt="Desert Raiders" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Hanging Stranger</h3>
+                        <p class="book-author">By Philip K. Dick</p>
+                        <a href="../book/2024/book9.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- 2024 Book 10 -->
+                <div class="book-card">
+                    <img src="../image/2024/book_10.jpg" alt="Mountain Storm" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Missing Will</h3>
+                        <p class="book-author">By Agatha Christie</p>
+                        <a href="../book/2024/book10.html">Read Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--   Don't miss up Books -->
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="title">2025</h2>
+            </div>
+            <div class="books-grid">
+                <!--  Book 1 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_1.jpg" alt="Love in Paris" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Plymouth Express Affair</h3>
+                        <p class="book-author">By Agatha Christie</p>
+                        <a href="../book/2025/book1.html">Read Now</a>
+                        
+                    </div>
+                </div>
+                <!--  Book 2 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_2.jpg" alt="Summer Love" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Hunter's Lodge Case</h3>
+                        <p class="book-author">By Agatha Christie</p>
+                        <a href="../book/2025/book2.html">Read Now</a>
+                        
+                    </div>
+                </div>
+                <!--  Book 3 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_3.jpg" alt="Moonlight Dance" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Road Stop</h3>
+                        <p class="book-author">By David Mason</p>
+                        <a href="../book/2025/book3.html">Read Now</a>
+                       
+                    </div>
+                </div>
+                <!-- Book 4 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_4.jpg" alt="Autumn Hearts" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The eater of souls</h3>
+                        <p class="book-author">By Henry Kuttner</p>
+                        <a href="../book/2025/book4.html">Read Now</a>
+                       
+                    </div>
+                </div>
+                <!-- Book 5 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_5.jpg" alt="Winter's Kiss" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Star</h3>
+                        <p class="book-author">H. G. Wells</p>
+                        <a href="../book/2025/book5.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!--  Book 6 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_6.jpg" alt="Spring Romance" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name"> Little Wizard Stories of Oz</h3>
+                        <p class="book-author">By L. Frank Baum</p>
+                        <a href="../book/2025/book6.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!--  Book 7 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_7.jpg" alt="Sunset Love" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The incredible slingshot bombs</h3>
+                        <p class="book-author">By Robert Moore Williams</p>
+                        <a href="../book/2025/book7.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- Book 8 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_8.jpg" alt="City Lights" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Ask a Foolish Question</h3>
+                        <p class="book-author">By Robert Sheckley</p>
+                        <a href="../book/2025/book8.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- Book 9 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_9.jpg" alt="Garden of Love" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Tony and the Beetles</h3>
+                        <p class="book-author">By Philip K. Dick</p>
+                        <a href="../book/2025/book9.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!--  Book 10 -->
+                <div class="book-card">
+                    <img src="../image/2025/book_10.jpg" alt="Starlit Dance" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Duel on Syrtis</h3>
+                        <p class="book-author">By Poul Anderson</p>
+                        <a href="../book/2025/book10.html">Read Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+         <!-- You May Likes  -->
+         <div class="category-section">
+            <div class="category-header">
+                <h2 class="title">You May Likes</h2>
+            </div>
+            <div class="books-grid">
+                <!-- YML Book 1 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book1.jpg" alt="Love in Paris" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The smear</h3>
+                        <p class="book-author">By John Beames</p>
+                        <a href="../book/you_may_like/book1.html">Read Now</a>
+                        
+                    </div>
+                </div>
+                <!-- YML Book 2 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book2.jpg" alt="Summer Love" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The Secret Garden</h3>
+                        <p class="book-author">Frances Hodgson Burnett</p>
+                        <a href="../book/you_may_like/book2.html">Read Now</a>
+                    </div>
+                </div>
+                <!-- YML Book 3 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book3.jpg" alt="Moonlight Dance" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The festival</h3>
+                        <p class="book-author">By H. P. Lovecraft</p>
+                        <a href="../book/you_may_like/book3.html">Read Now</a>
+                    </div>
+                </div>
+                <!-- YML Book 4 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book4.jpg" alt="Autumn Hearts" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The hounds of Tindalos</h3>
+                        <p class="book-author">By Frank Belknap Long</p>
+                        <a href="../book/you_may_like/book4.html">Read Now</a>
+                    </div>
+                </div>
+                <!-- YML Book 5 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book5.jpg" alt="Winter's Kiss" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The incredible slingshot bombs</h3>
+                        <p class="book-author">By Robert Moore Williams</p>
+                        <a href="../book/you_may_like/book5.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- YML Book 6 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book6.jpg" alt="Spring Romance" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Ask a Foolish Question</h3>
+                        <p class="book-author">By Robert Sheckley</p>
+                        <a href="../book/you_may_like/book6.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- YML Book 7 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book7.jpg" alt="Sunset Love" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">The man with a grouch</h3>
+                        <p class="book-author">By H. De Vere Stacpoole</p>
+                        <a href="../book/you_may_like/book7.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- YML Book 8 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book8.jpg" alt="City Lights" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">A Little Journey</h3>
+                        <p class="book-author">By Ray Bradbury</p>
+                        <a href="../book/you_may_like/book8.html">Read Now</a>
+                    </div>
+                </div>
+
+                <!-- YML Book 9 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book9.jpg" alt="Garden of Love" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Tony and the Beetles</h3>
+                        <p class="book-author">By Philip K. Dick</p>
+                        <a href="../book/you_may_like/book9.html">Read Now</a>
+                    </div>
+                </div>
+
+                
+
+                <!-- YML Book 10 -->
+                <div class="book-card">
+                    <img src="../image/you_may_like/book10.jpg" alt="Starlit Dance" class="book-image">
+                    <div class="book-info">
+                        <h3 class="book-name">Asleep in Armageddon</h3>
+                        <p class="book-author">Ray Bradbury</p>
+                        <a href="../book/you_may_like/book10.html">Read Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Uploaded Books Section -->
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="title">User Uploaded Books</h2>
+            </div>
+            <div class="books-grid" id="user-books-grid">
+                <!-- User uploaded books will be displayed here -->
+            </div>
+        </div>
+
+        <!-- About us  -->
+
+         <div class="about-section">
+            <div class="about-container">
+                <div class="about-content">
+                    <h2 class="about-title">About Us</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div class="info">
+                                <h3>Email</h3>
+                                <p>Book@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div class="info">
+                                <h3>Contact Us</h3>
+                                <p>+60 015-5858-5848</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="info">
+                                <h3>Address</h3>
+                                <p>Jalan Street </p>
+                                <p>96100, Sibu, Sarawak</p>
+                                <p>Malaysia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="../image/About_us/CompanyInfo.jpg" alt="Our Bookstore">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/catogories.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH8xyiOZufWJUwpWPjQwHLq7Iu1odAc7I",
+            authDomain: "skbook-d714f.firebaseapp.com",
+            databaseURL: "https://skbook-d714f-default-rtdb.firebaseio.com",
+            projectId: "skbook-d714f",
+            storageBucket: "skbook-d714f.firebasestorage.app",
+            messagingSenderId: "802609997862",
+            appId: "1:802609997862:web:3af2a67222d60873a5dee7",
+            measurementId: "G-H4QRWYC38E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Notification functionality
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationPopup = document.querySelector('.notification-popup');
+        const closeNotification = document.querySelector('.close-notification');
+        const notificationContent = document.querySelector('.notification-content');
+        const notificationBadge = document.querySelector('.notification-badge');
+
+        let unreadCount = 0;
+
+        // Function to update notification badge
+        function updateNotificationBadge() {
+            notificationBadge.textContent = unreadCount;
+            notificationBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+
+        // Function to format time
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Function to add a notification
+        function addNotification(feedback) {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+            
+            const authorInitial = feedback.author.charAt(0).toUpperCase();
+            const formattedTime = formatTime(feedback.timestamp);
+            
+            notificationItem.innerHTML = `
+                <div class="notification-avatar">${authorInitial}</div>
+                <div class="notification-details">
+                    <div class="notification-author">${feedback.author}</div>
+                    <div class="notification-time">${formattedTime}</div>
+                    <div class="notification-message">${feedback.content}</div>
+                </div>
+            `;
+            
+            notificationContent.insertBefore(notificationItem, notificationContent.firstChild);
+            unreadCount++;
+            updateNotificationBadge();
+        }
+
+        // Toggle notification popup
+        notificationBtn.addEventListener('click', () => {
+            notificationPopup.classList.toggle('show');
+            if (notificationPopup.classList.contains('show')) {
+                unreadCount = 0;
+                updateNotificationBadge();
+            }
+        });
+
+        // Close notification popup
+        closeNotification.addEventListener('click', () => {
+            notificationPopup.classList.remove('show');
+        });
+
+        // Close popup when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationPopup.contains(e.target) && !notificationBtn.contains(e.target)) {
+                notificationPopup.classList.remove('show');
+            }
+        });
+
+        // Load initial notifications
+        async function loadNotifications() {
+            try {
+                const feedbacksRef = ref(db, 'feedbacks');
+                const snapshot = await get(feedbacksRef);
+                
+                if (snapshot.exists()) {
+                    const feedbacks = snapshot.val();
+                    const recentFeedbacks = [];
+                    
+                    // Clear existing notifications
+                    notificationContent.innerHTML = '';
+                    
+                    // Iterate through all users' feedbacks
+                    Object.entries(feedbacks).forEach(([username, userFeedbacks]) => {
+                        if (userFeedbacks) {
+                            Object.entries(userFeedbacks).forEach(([timestamp, feedback]) => {
+                                if (feedback && feedback.content) {
+                                    recentFeedbacks.push({
+                                        author: feedback.author || username,
+                                        timestamp: parseInt(timestamp),
+                                        content: feedback.content
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Sort by timestamp (newest first) and take the 5 most recent
+                    recentFeedbacks
+                        .sort((a, b) => b.timestamp - a.timestamp)
+                        .slice(0, 5)
+                        .forEach(feedback => addNotification(feedback));
+                        
+                    // Update unread count
+                    unreadCount = recentFeedbacks.length;
+                    updateNotificationBadge();
+                } else {
+                    console.log('No feedbacks found in database');
+                    notificationContent.innerHTML = '<div class="no-notifications">No feedbacks available</div>';
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                notificationContent.innerHTML = '<div class="error-message">Error loading notifications</div>';
+            }
+        }
+
+        // Load notifications when page loads
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+
+        // Load user uploaded books
+        async function loadUserBooks() {
+            try {
+                const booksRef = ref(db, 'books');
+                const snapshot = await get(booksRef);
+                
+                const userBooksGrid = document.getElementById('user-books-grid');
+                userBooksGrid.innerHTML = '';
+
+                if (snapshot.exists()) {
+                    const books = snapshot.val();
+                    Object.entries(books).forEach(([username, userBooks]) => {
+                        Object.entries(userBooks).forEach(([bookId, book]) => {
+                            const bookCard = document.createElement('div');
+                            bookCard.className = 'book-card';
+                            bookCard.innerHTML = `
+                                <div class="book-info">
+                                    <h3 class="book-name">${book.title}</h3>
+                                    <p class="book-author">By ${book.author}</p>
+                                    <p class="book-genre">Genre: ${book.genre}</p>
+                                    <a href="read_book.html?username=${username}&bookId=${bookId}" class="read-now-btn">Read Now</a>
+                                </div>
+                            `;
+                            userBooksGrid.appendChild(bookCard);
+                        });
+                    });
+                } else {
+                    userBooksGrid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1 / -1;">No books uploaded yet.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading books:', error);
+            }
+        }
+
+        // Function to read a book
+        window.readBook = function(username, bookId) {
+            window.location.href = `read_book.html?username=${username}&bookId=${bookId}`;
+        };
+
+        // Load books when the page loads
+        window.onload = function() {
+            loadUserBooks();
+        };
+    </script>
+
+</body>
+</html>

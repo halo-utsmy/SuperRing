@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>User Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #ffffff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            color: #4361ee;
+        }
+
+        .logo-tagline {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4361ee;
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .nav-link.active {
+            color: #4361ee;
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #4361ee, #3451d1);
+            padding: 60px 40px;
+            color: white;
+            position: relative;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #2d3fe0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            border: 4px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 60px;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .profile-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .profile-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .profile-actions {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .profile-content {
+            padding: 40px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-group {
+            background: #f8f9fe;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .info-group:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .edit-profile-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-profile-btn:hover {
+            background-color: #3451d1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .document-section,
+        .document-box,
+        .document-box i,
+        .document-label,
+        .document-size {
+            display: none;
+        }
+
+        .profile-btn {
+            background: linear-gradient(135deg, #4361ee, #3451d1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .profile-btn:hover {
+            background: linear-gradient(135deg, #3451d1, #2d3fe0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .profile-btn i {
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .profile-header {
+                padding: 40px 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .document-section {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        .feedback-item {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .feedback-author {
+            font-weight: 600;
+            color: #4361ee;
+        }
+
+        .feedback-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .feedback-content {
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .feedback-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .delete-feedback-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .delete-feedback-btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+
+        .submit-feedback-btn:hover {
+            background: #3451d1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Edit Book Modal Styles */
+        .edit-book-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .edit-book-content {
+            background: white;
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .edit-book-title {
+            font-size: 24px;
+            color: #4361ee;
+        }
+
+        .close-edit-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .edit-book-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .edit-book-form input,
+        .edit-book-form select,
+        .edit-book-form textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .edit-book-form textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .edit-book-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .save-edit-btn,
+        .cancel-edit-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .save-edit-btn {
+            background: #4361ee;
+            color: white;
+            border: none;
+        }
+
+        .cancel-edit-btn {
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+        }
+
+        .save-edit-btn:hover {
+            background: #3451d1;
+            transform: translateY(-2px);
+        }
+
+        .cancel-edit-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="left-section">
+                <a href="#" class="logo-container">
+                    <i class="fas fa-book-open"></i>
+                    <div class="logo-content">
+                        <div class="logo-text">Book<span>Store</span></div>
+                        <div class="logo-tagline">Discover Your Next Adventure</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="nav-links">
+                <a href="Home_Page.html" class="nav-link">Home</a>
+                <a href="Categories.html" class="nav-link">Books</a>
+                <a href="About_Us.html" class="nav-link">About Us</a>
+            </nav>
+
+            <button class="profile-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="profile-header">
+                <div class="profile-actions">
+                
+                    <button class="action-btn" onclick="confirmDelete()">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="header-content">
+                    <div class="profile-image">
+                        <!-- The letter will be inserted by JavaScript -->
+                    </div>
+                    <div>
+                        <h1 class="profile-title" id="profile-name">Loading...</h1>
+                        <p class="profile-subtitle" id="profile-email">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-content">
+                <div class="info-grid">
+                    <div class="info-group">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value" id="profile-name-details">Loading...</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value" id="profile-email-details">Loading...</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value" id="profile-phone">Loading...</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Age</div>
+                        <div class="info-value" id="profile-age">Loading...</div>
+                    </div>
+                </div>
+
+                <button class="edit-profile-btn">
+                    <i class="fas fa-edit"></i>
+                    Edit Profile
+                </button>
+
+                <!-- Book Creation Section -->
+                <div class="book-creation-section" style="margin-top: 40px;">
+                    <h2 style="margin-bottom: 20px; color: #4361ee;">Create Your Book</h2>
+                    
+                    <div class="book-creation-form" style="background: #f8f9fe; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                        <div class="form-group">
+                            <label for="book-title" style="display: block; margin-bottom: 8px; color: #666; font-weight: 500;">Book Title</label>
+                            <input type="text" id="book-title" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 15px;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="book-genre" style="display: block; margin-bottom: 8px; color: #666; font-weight: 500;">Genre</label>
+                            <select id="book-genre" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 15px;">
+                                <option value="fiction">Fiction</option>
+                                <option value="non-fiction">Non-Fiction</option>
+                                <option value="mystery">Mystery</option>
+                                <option value="romance">Romance</option>
+                                <option value="science-fiction">Science Fiction</option>
+                                <option value="fantasy">Fantasy</option>
+                                <option value="biography">Biography</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="book-content" style="display: block; margin-bottom: 8px; color: #666; font-weight: 500;">Book Content</label>
+                            <textarea id="book-content" style="width: 100%; min-height: 300px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 15px; resize: vertical;"></textarea>
+                        </div>
+
+                        <button class="submit-book-btn" style="background: #4361ee; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">
+                            <i class="fas fa-book"></i> Publish Book
+                        </button>
+                    </div>
+
+                    <!-- My Books Section -->
+                    <div class="my-books-section">
+                        <h3 style="margin-bottom: 20px; color: #4361ee;">My Published Books</h3>
+                        <div class="books-grid" id="my-books-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                            <!-- Books will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Section -->
+                <div class="feedback-section" style="margin-top: 40px;">
+                    <h2 style="margin-bottom: 20px; color: #4361ee;">Your Feedback</h2>
+                    
+                    <!-- Feedback Form -->
+                    <div class="feedback-form" style="background: #f8f9fe; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                        <textarea id="feedback-text" placeholder="Share your thoughts about our service..." style="width: 100%; min-height: 100px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 15px; resize: vertical;"></textarea>
+                        <button class="submit-feedback-btn" style="background: #4361ee; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;">
+                            <i class="fas fa-paper-plane"></i> Submit Feedback
+                        </button>
+                    </div>
+
+                    <!-- Feedback List -->
+                    <div class="feedback-list" id="feedback-list" style="display: grid; gap: 20px;">
+                        <!-- Feedback items will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Book Modal -->
+    <div class="edit-book-modal" id="editBookModal">
+        <div class="edit-book-content">
+            <div class="edit-book-header">
+                <h2 class="edit-book-title">Edit Book</h2>
+                <button class="close-edit-modal" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form class="edit-book-form" id="editBookForm">
+                <input type="hidden" id="edit-book-key">
+                <input type="text" id="edit-book-title" placeholder="Book Title" required>
+                <select id="edit-book-genre" required>
+                    <option value="fiction">Fiction</option>
+                    <option value="non-fiction">Non-Fiction</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="science-fiction">Science Fiction</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="biography">Biography</option>
+                    <option value="other">Other</option>
+                </select>
+                <textarea id="edit-book-content" placeholder="Book Content" required></textarea>
+                <div class="edit-book-buttons">
+                    <button type="button" class="cancel-edit-btn" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="save-edit-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getDatabase, ref, update, remove, get, set } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-storage.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH8xyiOZufWJUwpWPjQwHLq7Iu1odAc7I",
+            authDomain: "skbook-d714f.firebaseapp.com",
+            databaseURL: "https://skbook-d714f-default-rtdb.firebaseio.com",
+            projectId: "skbook-d714f",
+            storageBucket: "skbook-d714f.firebasestorage.app",
+            messagingSenderId: "802609997862",
+            appId: "1:802609997862:web:3af2a67222d60873a5dee7",
+            measurementId: "G-H4QRWYC38E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+
+        // Make logout function globally available
+        window.logout = function() {
+            signOut(auth).then(() => {
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                window.location.href = 'Home_Page.html';
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        };
+
+        // Make delete functions globally available
+        window.confirmDelete = async function() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                await deleteAccount();
+            }
+        };
+
+        async function deleteAccount() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            try {
+                // Delete user data from Firebase
+                await remove(ref(db, 'users/' + username));
+                
+                // Sign out the user
+                await signOut(auth);
+                
+                // Clear local storage
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                
+                // Redirect to home page
+                window.location.href = 'Home_Page.html';
+                
+                alert('Your account has been successfully deleted.');
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert('Failed to delete account. Please try again.');
+            }
+        }
+
+        window.onload = function() {
+            // Check if user is logged in
+            const authToken = localStorage.getItem('userToken');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+           
+    
+            displayUserInfo();
+            setupEventListeners();
+            loadFeedbacks();
+            loadMyBooks();
+            
+            // Update profile button to show logout icon
+            const profileBtn = document.querySelector('.profile-btn');
+            profileBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+        };
+
+        function displayUserInfo() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            const name = userData.username || 'Guest User';
+            const email = userData.email || 'No email provided';
+            const phone = userData.PhoneNumber || '---Please update your phone number---';
+            const age = userData.age || 'Not specified';
+            
+            // Update header information
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-email').textContent = email;
+            
+            // Update detailed information
+            document.getElementById('profile-name-details').textContent = name;
+            document.getElementById('profile-email-details').textContent = email;
+            document.getElementById('profile-phone').textContent = phone;
+            document.getElementById('profile-age').textContent = age;
+
+            // Update profile image with first letter
+            const profileImage = document.querySelector('.profile-image');
+            profileImage.innerHTML = name.charAt(0);
+        }
+
+        function setupEventListeners() {
+            document.querySelector('.edit-profile-btn').addEventListener('click', function() {
+                const infoValues = document.querySelectorAll('.info-value');
+                const editBtn = this;
+                
+                if (editBtn.innerHTML.includes('Edit')) {
+                    // Enable editing
+                    infoValues.forEach(element => {
+                        element.contentEditable = "true";
+                        element.style.backgroundColor = '#fff';
+                        element.style.border = '2px solid #4361ee';
+                    });
+                    editBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                } else {
+                    // Save changes
+                    infoValues.forEach(element => {
+                        element.contentEditable = "false";
+                        element.style.backgroundColor = '';
+                        element.style.border = '';
+                    });
+                    editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit Profile';
+                    
+                    updateUserInfo();
+                }
+            });
+
+            // Add feedback submit event listener
+            document.querySelector('.submit-feedback-btn').addEventListener('click', submitFeedback);
+        }
+
+        async function updateUserInfo() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            const updatedData = {
+                username: document.getElementById('profile-name-details').textContent,
+                email: document.getElementById('profile-email-details').textContent,
+                PhoneNumber: document.getElementById('profile-phone').textContent,
+                age: document.getElementById('profile-age').textContent
+            };
+
+            try {
+                // Update Firebase
+                await update(ref(db, 'users/' + username), updatedData);
+                
+                // Update localStorage
+                localStorage.setItem('userData', JSON.stringify(updatedData));
+                
+                // Update displayed information
+                displayUserInfo();
+                
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile. Please try again.');
+            }
+        }
+
+        // Add feedback functionality
+        async function loadFeedbacks() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            try {
+                const feedbacksRef = ref(db, 'feedbacks/' + username);
+                const snapshot = await get(feedbacksRef);
+                
+                const feedbackList = document.getElementById('feedback-list');
+                feedbackList.innerHTML = '';
+
+                if (snapshot.exists()) {
+                    const feedbacks = snapshot.val();
+                    Object.entries(feedbacks).forEach(([key, feedback]) => {
+                        const feedbackItem = document.createElement('div');
+                        feedbackItem.className = 'feedback-item';
+                        feedbackItem.innerHTML = `
+                            <div class="feedback-header">
+                                <span class="feedback-author">${feedback.author}</span>
+                                <span class="feedback-date">${new Date(feedback.timestamp).toLocaleString()}</span>
+                            </div>
+                            <div class="feedback-content">${feedback.content}</div>
+                            <div class="feedback-actions">
+                                <button class="delete-feedback-btn" data-key="${key}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        `;
+                        feedbackList.appendChild(feedbackItem);
+                    });
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-feedback-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const feedbackKey = this.getAttribute('data-key');
+                            deleteFeedback(feedbackKey);
+                        });
+                    });
+                } else {
+                    feedbackList.innerHTML = '<p style="text-align: center; color: #666;">No feedbacks yet. Be the first to share your thoughts!</p>';
+                }
+            } catch (error) {
+                console.error('Error loading feedbacks:', error);
+            }
+        }
+
+        async function deleteFeedback(feedbackKey) {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            if (confirm('Are you sure you want to delete this feedback?')) {
+                try {
+                    const feedbackRef = ref(db, 'feedbacks/' + username + '/' + feedbackKey);
+                    await remove(feedbackRef);
+                    loadFeedbacks();
+                    alert('Feedback deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting feedback:', error);
+                    alert('Failed to delete feedback. Please try again.');
+                }
+            }
+        }
+
+        async function submitFeedback() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+            const feedbackText = document.getElementById('feedback-text').value.trim();
+
+            if (!feedbackText) {
+                alert('Please enter your feedback before submitting.');
+                return;
+            }
+
+            try {
+                const feedbackRef = ref(db, 'feedbacks/' + username + '/' + Date.now());
+                await set(feedbackRef, {
+                    author: username,
+                    content: feedbackText,
+                    timestamp: Date.now()
+                });
+
+                document.getElementById('feedback-text').value = '';
+                loadFeedbacks();
+                alert('Thank you for your feedback!');
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback. Please try again.');
+            }
+        }
+
+        // Add book creation functionality
+        async function createBook() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+            
+            const title = document.getElementById('book-title').value.trim();
+            const genre = document.getElementById('book-genre').value;
+            const content = document.getElementById('book-content').value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            try {
+                // Create book in database
+                const bookRef = ref(db, `books/${username}/${Date.now()}`);
+                await set(bookRef, {
+                    title,
+                    genre,
+                    content,
+                    author: username,
+                    createdAt: Date.now(),
+                    likes: 0,
+                    views: 0
+                });
+
+                // Clear form
+                document.getElementById('book-title').value = '';
+                document.getElementById('book-content').value = '';
+
+                // Reload books
+                loadMyBooks();
+                
+                alert('Book published successfully!');
+            } catch (error) {
+                console.error('Error creating book:', error);
+                alert('Failed to publish book. Please try again.');
+            }
+        }
+
+        async function loadMyBooks() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            try {
+                const booksRef = ref(db, `books/${username}`);
+                const snapshot = await get(booksRef);
+                
+                const booksGrid = document.getElementById('my-books-grid');
+                booksGrid.innerHTML = '';
+
+                if (snapshot.exists()) {
+                    const books = snapshot.val();
+                    Object.entries(books).forEach(([key, book]) => {
+                        const bookCard = document.createElement('div');
+                        bookCard.className = 'book-card';
+                        bookCard.style.cssText = `
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                            overflow: hidden;
+                            transition: transform 0.3s ease;
+                        `;
+                        bookCard.innerHTML = `
+                            <div style="padding: 15px;">
+                                <h4 style="margin-bottom: 8px; color: #1a1a1a;">${book.title}</h4>
+                                <p style="color: #666; font-size: 14px; margin-bottom: 8px;">Genre: ${book.genre}</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #666; font-size: 12px;">${new Date(book.createdAt).toLocaleDateString()}</span>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="edit-book-btn" data-key="${key}" style="background: #4361ee; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="delete-book-btn" data-key="${key}" style="background: #ff4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        booksGrid.appendChild(bookCard);
+                    });
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-book-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const bookKey = this.getAttribute('data-key');
+                            deleteBook(bookKey);
+                        });
+                    });
+
+                    // Add event listeners to edit buttons
+                    document.querySelectorAll('.edit-book-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const bookKey = this.getAttribute('data-key');
+                            openEditModal(bookKey);
+                        });
+                    });
+                } else {
+                    booksGrid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1 / -1;">You haven\'t published any books yet.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading books:', error);
+            }
+        }
+
+        async function deleteBook(bookKey) {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            if (confirm('Are you sure you want to delete this book?')) {
+                try {
+                    const bookRef = ref(db, `books/${username}/${bookKey}`);
+                    await remove(bookRef);
+                    loadMyBooks();
+                    alert('Book deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting book:', error);
+                    alert('Failed to delete book. Please try again.');
+                }
+            }
+        }
+
+        async function openEditModal(bookKey) {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+
+            try {
+                const bookRef = ref(db, `books/${username}/${bookKey}`);
+                const snapshot = await get(bookRef);
+                
+                if (snapshot.exists()) {
+                    const book = snapshot.val();
+                    
+                    // Fill the form with book data
+                    document.getElementById('edit-book-key').value = bookKey;
+                    document.getElementById('edit-book-title').value = book.title;
+                    document.getElementById('edit-book-genre').value = book.genre;
+                    document.getElementById('edit-book-content').value = book.content;
+                    
+                    // Show the modal
+                    document.getElementById('editBookModal').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading book for editing:', error);
+                alert('Failed to load book for editing. Please try again.');
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editBookModal').style.display = 'none';
+        }
+
+        // Add event listener for edit form submission
+        document.getElementById('editBookForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const username = userData.username;
+            const bookKey = document.getElementById('edit-book-key').value;
+            
+            const updatedBook = {
+                title: document.getElementById('edit-book-title').value.trim(),
+                genre: document.getElementById('edit-book-genre').value,
+                content: document.getElementById('edit-book-content').value.trim(),
+                updatedAt: Date.now()
+            };
+
+            try {
+                const bookRef = ref(db, `books/${username}/${bookKey}`);
+                await update(bookRef, updatedBook);
+                
+                closeEditModal();
+                loadMyBooks();
+                alert('Book updated successfully!');
+            } catch (error) {
+                console.error('Error updating book:', error);
+                alert('Failed to update book. Please try again.');
+            }
+        });
+
+        // Add event listener for book submission
+        document.querySelector('.submit-book-btn').addEventListener('click', createBook);
+    </script>
+</body>
+</html>

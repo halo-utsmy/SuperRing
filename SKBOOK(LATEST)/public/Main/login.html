@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SKBook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <div class="left-section">
+        <div class="logo">
+            <h2 style="color: #a446c1;">SKBook</h2>
+        </div>
+        <h1>Welcome back</h1>
+        <p class="subtitle">Please enter your details to sign in</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Sign in</button>
+        </form>
+        <div class="register-link">
+            <p>Don't have an account? <a href="Register.html">Sign up</a></p>
+        </div>
+    </div>
+    <div class="right-section">
+        <div class="decoration"></div>
+        <img src="../image/Profile/Login_Latest.jpg">
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+
+        // Base User class
+        class User {
+            constructor(username, email) {
+                this.username = username;
+                this.email = email;
+            }
+
+            displayInfo() {
+                return `Username: ${this.username}, Email: ${this.email}`;
+            }
+
+            validateEmail() {
+                return /^\S+@\S+\.\S+$/.test(this.email);
+            }
+        }
+
+        // RegisteredUser class extending User
+        class RegisteredUser extends User {
+            constructor(username, email, password) {
+                super(username, email);
+                this.password = password;
+            }
+
+            // Polymorphism: Override displayInfo method
+            displayInfo() {
+                return `${super.displayInfo()}`;
+            }
+
+            // Additional methods specific to registered users
+            validatePassword() {
+                return this.password.length >= 6;
+            }
+
+            async authenticate(db) {
+                try {
+                    const userRef = ref(db, 'users/' + this.username);
+                    const snapshot = await get(userRef);
+                    
+                    if (!snapshot.exists()) {
+                        throw new Error('User not found');
+                    }
+
+                    const userData = snapshot.val();
+                    if (userData.password !== this.password) {
+                        throw new Error('Invalid password');
+                    }
+
+                    return userData;
+                } catch (error) {
+                    throw new Error('Authentication failed: ' + error.message);
+                }
+            }
+
+            saveToLocalStorage(userData) {
+                try {
+                    localStorage.setItem('userToken', 'logged-in');
+                    localStorage.setItem('userData', JSON.stringify({
+                        username: this.username,
+                        email: userData.email,
+                        PhoneNumber: userData.PhoneNumber,
+                        age: userData.age
+                    }));
+                    return true;
+                } catch (error) {
+                    throw new Error('LocalStorage save failed: ' + error.message);
+                }
+            }
+        }
+
+        // GuestUser class extending User
+        class GuestUser extends User {
+            constructor() {
+                super('Guest', 'No email provided');
+            }
+
+            // Polymorphism: Override displayInfo method
+            displayInfo() {
+                return 'Guest User - Limited Access';
+            }
+        }
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH8xyiOZufWJUwpWPjQwHLq7Iu1odAc7I",
+            authDomain: "skbook-d714f.firebaseapp.com",
+            databaseURL: "https://skbook-d714f-default-rtdb.firebaseio.com",
+            projectId: "skbook-d714f",
+            storageBucket: "skbook-d714f.firebasestorage.app",
+            messagingSenderId: "802609997862",
+            appId: "1:802609997862:web:3af2a67222d60873a5dee7",
+            measurementId: "G-H4QRWYC38E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Handle login form submission
+        document.getElementById('loginForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Create new RegisteredUser instance
+                const user = new RegisteredUser(username, '', password);
+
+                // Validate input
+                if (!username) {
+                    throw new Error('Please enter your username');
+                }
+                if (!user.validatePassword()) {
+                    throw new Error('Password must be at least 6 characters');
+                }
+
+                // Authenticate user
+                const userData = await user.authenticate(db);
+                user.saveToLocalStorage(userData);
+                
+                alert("Login Successful!");
+                window.location.href = 'Profile.html';
+            } catch (error) {
+                console.error("Error:", error);
+                alert(error.message || "Login failed. Please try again.");
+            }
+        };
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const userToken = localStorage.getItem('userToken');
+            if (userToken === 'logged-in') {
+                window.location.href = 'Profile.html';
+            }
+        });
+    </script>
+</body>
+</html>
